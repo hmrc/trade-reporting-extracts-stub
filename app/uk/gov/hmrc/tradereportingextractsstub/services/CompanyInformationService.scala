@@ -14,13 +14,27 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.tradereportingextractsstub.config
+package uk.gov.hmrc.tradereportingextractsstub.services
 
-import javax.inject.{Inject, Singleton}
-import play.api.Configuration
+import play.api.libs.json.Json
+import play.api.mvc.Result
+import play.api.mvc.Results.Ok
+import uk.gov.hmrc.tradereportingextractsstub.models.{AddressInformation, CompanyInformation}
 
-@Singleton
-class AppConfig @Inject()(config: Configuration) {
+class CompanyInformationService {
 
-  val appName: String = config.get[String]("appName")
+  def companyInformation(): Result = {
+    val res = CompanyInformation(
+      "ABC Company",
+      "1",
+      AddressInformation(
+        "XYZ Street",
+        "ABC City",
+        Some("G11 2ZZ"),
+        "GB"
+      )
+    )
+    Ok(Json.toJson(res))
+  }
+
 }

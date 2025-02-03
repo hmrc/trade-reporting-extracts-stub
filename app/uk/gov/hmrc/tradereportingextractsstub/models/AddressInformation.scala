@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.tradereportingextractsstub.config
+package uk.gov.hmrc.tradereportingextractsstub.models
 
-import javax.inject.{Inject, Singleton}
-import play.api.Configuration
+import play.api.libs.json.{Json, OFormat}
 
-@Singleton
-class AppConfig @Inject()(config: Configuration) {
+case class AddressInformation(streetAndNumber: String,
+                              city: String,
+                              postalCode: Option[String],
+                              countryCode: String)
 
-  val appName: String = config.get[String]("appName")
+object AddressInformation {
+  implicit val format: OFormat[AddressInformation] = Json.format[AddressInformation]
 }
