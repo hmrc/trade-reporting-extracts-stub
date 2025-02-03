@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 HM Revenue & Customs
+ * Copyright 2023 HM Revenue & Customs
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,15 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.tradereportingextractsstub.config
+package uk.gov.hmrc.tradereportingextractsstub.models
 
-import javax.inject.{Inject, Singleton}
-import play.api.Configuration
+import play.api.libs.json.{JsString, Json, OFormat, Writes}
 
-@Singleton
-class AppConfig @Inject()(config: Configuration) {
+import java.time.LocalDateTime
 
-  val appName: String = config.get[String]("appName")
+case class NotificationEmail(address: String,
+                             timestamp: LocalDateTime)
+
+object NotificationEmail {
+  implicit val emailFormat: OFormat[NotificationEmail] = Json.format[NotificationEmail]
 }

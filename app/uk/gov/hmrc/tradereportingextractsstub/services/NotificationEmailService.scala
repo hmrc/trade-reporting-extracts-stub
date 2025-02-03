@@ -14,13 +14,23 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.tradereportingextractsstub.config
+package uk.gov.hmrc.tradereportingextractsstub.services
 
-import javax.inject.{Inject, Singleton}
-import play.api.Configuration
+import play.api.libs.json.Json
+import play.api.mvc.Result
+import play.api.mvc.Results.Ok
+import uk.gov.hmrc.tradereportingextractsstub.models.{NotificationEmail}
 
-@Singleton
-class AppConfig @Inject()(config: Configuration) {
+import java.time.{LocalDateTime}
 
-  val appName: String = config.get[String]("appName")
+class NotificationEmailService {
+
+  def notificationEmail(): Result = {
+    val res = NotificationEmail(
+      "example@test.com",
+      LocalDateTime.now()
+    )
+    Ok(Json.toJson(res))
+  }
+
 }
