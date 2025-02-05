@@ -2,3 +2,4 @@
 
 GET        /company-information             uk.gov.hmrc.tradereportingextractsstub.controllers.CompanyInformationController.companyInformation
 GET        /verified-email                  uk.gov.hmrc.tradereportingextractsstub.controllers.NotificationEmailController.notificationEmail
+GET        /eori-history                    uk.gov.hmrc.tradereportingextractsstub.controllers.EoriHistoryController.eoriHistory
