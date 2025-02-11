@@ -29,9 +29,7 @@ class CompanyInformationControllerSpec extends AnyWordSpec, Matchers:
   private val companyInformationService = new CompanyInformationService
   private val controller = new CompanyInformationController(companyInformationService, Helpers.stubControllerComponents())
 
-  "GET /company-information" should {
-    "return 200" in {
+  "GET /company-information" should:
+    "return 200" in:
       val result = controller.companyInformation()(fakeRequest)
       status(result) shouldBe Status.OK
-    }
-  }

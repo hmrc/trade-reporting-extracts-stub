@@ -29,9 +29,7 @@ class EoriHistoryControllerSpec extends AnyWordSpec, Matchers:
   private val eoriHistoryService = new EoriHistoryService
   private val controller = new EoriHistoryController(eoriHistoryService, Helpers.stubControllerComponents())
 
-  "GET /eori-history" should {
-    "return 200" in {
+  "GET /eori-history" should:
+    "return 200" in:
       val result = controller.eoriHistory()(fakeRequest)
       status(result) shouldBe Status.OK
-    }
-  }

@@ -29,9 +29,7 @@ class NotificationEmailControllerSpec extends AnyWordSpec, Matchers:
   private val notificationEmailService = new NotificationEmailService
   private val controller = new NotificationEmailController(notificationEmailService, Helpers.stubControllerComponents())
 
-  "GET /verified-email" should {
-    "return 200" in {
+  "GET /verified-email" should:
+    "return 200" in:
       val result = controller.notificationEmail()(fakeRequest)
       status(result) shouldBe Status.OK
-    }
-  }

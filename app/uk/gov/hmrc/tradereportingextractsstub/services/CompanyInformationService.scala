@@ -23,7 +23,7 @@ import uk.gov.hmrc.tradereportingextractsstub.models.{AddressInformation, Compan
 
 class CompanyInformationService:
 
-  def companyInformation(): Result = {
+  def companyInformation(): Result =
     val res = CompanyInformation(
       "ABC Company",
       "1",
@@ -35,4 +35,3 @@ class CompanyInformationService:
       )
     )
     Ok(Json.toJson(res))
-  }

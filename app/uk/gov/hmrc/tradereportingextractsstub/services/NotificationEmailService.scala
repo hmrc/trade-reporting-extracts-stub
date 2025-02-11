@@ -25,10 +25,9 @@ import java.time.{LocalDateTime}
 
 class NotificationEmailService:
 
-  def notificationEmail(): Result = {
+  def notificationEmail(): Result =
     val res = NotificationEmail(
       "example@test.com",
       LocalDateTime.now()
     )
     Ok(Json.toJson(res))
-  }
