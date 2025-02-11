@@ -23,7 +23,7 @@ import uk.gov.hmrc.tradereportingextractsstub.models.{NotificationEmail}
 
 import java.time.{LocalDateTime}
 
-class NotificationEmailService {
+class NotificationEmailService:
 
   def notificationEmail(): Result = {
     val res = NotificationEmail(
@@ -32,5 +32,3 @@ class NotificationEmailService {
     )
     Ok(Json.toJson(res))
   }
-
-}

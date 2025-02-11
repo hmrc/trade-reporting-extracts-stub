@@ -24,7 +24,6 @@ case class EoriPeriod(eori: String,
   def definedDates: Boolean = validFrom.isDefined || validUntil.isDefined
 }
 
-object EoriPeriod {
+object EoriPeriod:
   implicit val writes: OWrites[EoriPeriod] = Json.writes[EoriPeriod]
   implicit val format: OFormat[EoriPeriod] = Json.format[EoriPeriod]
-}

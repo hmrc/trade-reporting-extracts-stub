@@ -22,7 +22,7 @@ import play.api.mvc.Results.Ok
 import uk.gov.hmrc.tradereportingextractsstub.models.{EoriHistoryResponse, EoriPeriod}
 
 
-class EoriHistoryService {
+class EoriHistoryService:
   def eoriHistory(): Result = {
     val eori1: String = "EORI00000001"
     val eori2: String = "EORI00000002"
@@ -31,4 +31,3 @@ class EoriHistoryService {
 
     Ok(Json.toJson(EoriHistoryResponse(Seq(period1, period2))))
   }
-}
