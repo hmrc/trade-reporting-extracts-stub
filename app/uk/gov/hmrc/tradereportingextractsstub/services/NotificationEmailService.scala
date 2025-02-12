@@ -19,9 +19,9 @@ package uk.gov.hmrc.tradereportingextractsstub.services
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.mvc.Results.Ok
-import uk.gov.hmrc.tradereportingextractsstub.models.{NotificationEmail}
+import uk.gov.hmrc.tradereportingextractsstub.models.NotificationEmail
 
-import java.time.{LocalDateTime}
+import java.time.LocalDateTime
 
 class NotificationEmailService:
 
