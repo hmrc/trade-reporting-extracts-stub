@@ -26,9 +26,8 @@ import scala.concurrent.Future
 @Singleton()
 class NotificationEmailController @Inject()(notificationEmailService: NotificationEmailService,
                                             cc: ControllerComponents)
-    extends BackendController(cc) {
+    extends BackendController(cc):
 
   def notificationEmail(): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(notificationEmailService.notificationEmail())
   }
-}

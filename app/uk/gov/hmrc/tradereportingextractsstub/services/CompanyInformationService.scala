@@ -21,9 +21,9 @@ import play.api.mvc.Result
 import play.api.mvc.Results.Ok
 import uk.gov.hmrc.tradereportingextractsstub.models.{AddressInformation, CompanyInformation}
 
-class CompanyInformationService {
+class CompanyInformationService:
 
-  def companyInformation(): Result = {
+  def companyInformation(): Result =
     val res = CompanyInformation(
       "ABC Company",
       "1",
@@ -35,6 +35,3 @@ class CompanyInformationService {
       )
     )
     Ok(Json.toJson(res))
-  }
-
-}

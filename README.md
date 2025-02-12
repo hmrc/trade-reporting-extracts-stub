@@ -1,7 +1,13 @@
 
 # trade-reporting-extracts-stub
 
-This is a placeholder README.md for a new repository
+The Trade Reporting Extracts responsibilities:
+- Simulate the responses of EORI History services
+- Simulate the responses of Notification Email services
+- Simulate the responses of Company Information services
+- 
+## Development Setup
+- Run locally: `sbt run` which runs on port `2101` by default
 
 ### License
 

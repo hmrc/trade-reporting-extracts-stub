@@ -26,9 +26,8 @@ import scala.concurrent.Future
 @Singleton()
 class CompanyInformationController @Inject()(companyInformationService: CompanyInformationService,
                                              cc: ControllerComponents)
-    extends BackendController(cc) {
+    extends BackendController(cc):
 
   def companyInformation(): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(companyInformationService.companyInformation())
   }
-}
