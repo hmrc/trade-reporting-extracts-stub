@@ -28,6 +28,6 @@ class NotificationEmailController @Inject()(notificationEmailService: Notificati
                                             cc: ControllerComponents)
     extends BackendController(cc):
 
-  def notificationEmail(): Action[AnyContent] = Action.async { implicit request =>
+  def notificationEmail(eori: String): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(notificationEmailService.notificationEmail())
   }

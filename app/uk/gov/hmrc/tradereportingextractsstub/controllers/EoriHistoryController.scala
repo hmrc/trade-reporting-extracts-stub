@@ -28,6 +28,6 @@ class EoriHistoryController @Inject()(eoriHistoryService: EoriHistoryService,
                                       cc: ControllerComponents)
     extends BackendController(cc):
 
-  def eoriHistory(): Action[AnyContent] = Action.async { implicit request =>
+  def eoriHistory(eori: String): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(eoriHistoryService.eoriHistory())
   }
