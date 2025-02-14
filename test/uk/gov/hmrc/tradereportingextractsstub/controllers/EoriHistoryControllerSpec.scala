@@ -31,5 +31,5 @@ class EoriHistoryControllerSpec extends AnyWordSpec, Matchers:
 
   "GET /eori-history" should:
     "return 200" in:
-      val result = controller.eoriHistory()(fakeRequest)
+      val result = controller.eoriHistory("AB0000000029")(fakeRequest)
       status(result) shouldBe Status.OK
