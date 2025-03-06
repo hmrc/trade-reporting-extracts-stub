@@ -31,5 +31,5 @@ class NotificationEmailControllerSpec extends AnyWordSpec, Matchers:
 
   "GET /verified-email" should:
     "return 200" in:
-      val result = controller.notificationEmail("AB000000029")(fakeRequest)
+      val result = controller.notificationEmail()(fakeRequest)
       status(result) shouldBe Status.OK

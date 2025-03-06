@@ -28,6 +28,6 @@ class CompanyInformationController @Inject()(companyInformationService: CompanyI
                                              cc: ControllerComponents)
     extends BackendController(cc):
 
-  def companyInformation(eori: String): Action[AnyContent] = Action.async { implicit request =>
+  def companyInformation(): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(companyInformationService.companyInformation())
   }
