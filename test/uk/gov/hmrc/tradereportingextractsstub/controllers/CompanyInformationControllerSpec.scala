@@ -31,5 +31,5 @@ class CompanyInformationControllerSpec extends AnyWordSpec, Matchers:
 
   "GET /company-information" should:
     "return 200" in:
-      val result = controller.companyInformation("AB000000029")(fakeRequest)
+      val result = controller.companyInformation()(fakeRequest)
       status(result) shouldBe Status.OK
