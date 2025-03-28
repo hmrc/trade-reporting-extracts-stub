@@ -4,7 +4,8 @@ ThisBuild / majorVersion := 0
 ThisBuild / scalaVersion := "3.3.4"
 
 lazy val microservice = Project("trade-reporting-extracts-stub", file("."))
-  .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin)
+  .enablePlugins(play.sbt.PlayScala, SbtDistributablesPlugin, ScalafmtPlugin)
+  .disablePlugins(JUnitXmlReportPlugin)
   .settings(
     libraryDependencies ++= AppDependencies.compile ++ AppDependencies.test,
     // https://www.scala-lang.org/2021/01/12/configuring-and-suppressing-warnings.html

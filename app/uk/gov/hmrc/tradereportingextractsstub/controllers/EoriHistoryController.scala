@@ -18,14 +18,13 @@ package uk.gov.hmrc.tradereportingextractsstub.controllers
 
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import uk.gov.hmrc.tradereportingextractsstub.services.{EoriHistoryService, NotificationEmailService}
+import uk.gov.hmrc.tradereportingextractsstub.services.EoriHistoryService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton()
-class EoriHistoryController @Inject()(eoriHistoryService: EoriHistoryService,
-                                      cc: ControllerComponents)
+class EoriHistoryController @Inject() (eoriHistoryService: EoriHistoryService, cc: ControllerComponents)
     extends BackendController(cc):
 
   def eoriHistory(): Action[AnyContent] = Action.async { implicit request =>

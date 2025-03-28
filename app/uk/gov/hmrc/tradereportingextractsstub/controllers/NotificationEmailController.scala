@@ -18,15 +18,16 @@ package uk.gov.hmrc.tradereportingextractsstub.controllers
 
 import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import uk.gov.hmrc.tradereportingextractsstub.services.{CompanyInformationService, NotificationEmailService}
+import uk.gov.hmrc.tradereportingextractsstub.services.NotificationEmailService
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton()
-class NotificationEmailController @Inject()(notificationEmailService: NotificationEmailService,
-                                            cc: ControllerComponents)
-    extends BackendController(cc):
+class NotificationEmailController @Inject() (
+  notificationEmailService: NotificationEmailService,
+  cc: ControllerComponents
+) extends BackendController(cc):
 
   def notificationEmail(): Action[AnyContent] = Action.async { implicit request =>
     Future.successful(notificationEmailService.notificationEmail())
