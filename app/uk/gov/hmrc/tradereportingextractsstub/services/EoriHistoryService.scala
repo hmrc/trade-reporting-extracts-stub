@@ -21,11 +21,10 @@ import play.api.mvc.Result
 import play.api.mvc.Results.Ok
 import uk.gov.hmrc.tradereportingextractsstub.models.{EoriHistoryResponse, EoriPeriod}
 
-
 class EoriHistoryService:
   def eoriHistory(): Result = {
-    val eori1: String = "EORI00000001"
-    val eori2: String = "EORI00000002"
+    val eori1: String       = "EORI00000001"
+    val eori2: String       = "EORI00000002"
     val period1: EoriPeriod = EoriPeriod(eori1, Some("2001-01-20T00:00:00Z"), None)
     val period2: EoriPeriod = EoriPeriod(eori2, Some("2002-01-20T00:00:00Z"), None)
 

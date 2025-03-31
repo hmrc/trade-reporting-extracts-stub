@@ -16,12 +16,11 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.models
 
-import play.api.libs.json.{JsString, Json, OFormat, Writes}
+import play.api.libs.json.{Json, OFormat, Writes}
 
 import java.time.LocalDateTime
 
-case class NotificationEmail(address: String,
-                             timestamp: LocalDateTime)
+case class NotificationEmail(address: String, timestamp: LocalDateTime)
 
 object NotificationEmail:
   implicit val emailFormat: OFormat[NotificationEmail] = Json.format[NotificationEmail]

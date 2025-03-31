@@ -17,19 +17,22 @@
 package uk.gov.hmrc.tradereportingextractsstub.controllers
 
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
+import org.scalatest.matchers.should.Matchers.shouldBe
 import play.api.http.Status
-import play.api.test.Helpers._
+import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.tradereportingextractsstub.services.{EoriHistoryService, NotificationEmailService}
+import uk.gov.hmrc.tradereportingextractsstub.controllers.utils.SpecBase
+import uk.gov.hmrc.tradereportingextractsstub.services.EoriHistoryService
 
-class EoriHistoryControllerSpec extends AnyWordSpec, Matchers:
-
-  private val fakeRequest = FakeRequest("GET", "/eori-history")
+class EoriHistoryControllerSpec extends SpecBase {
+  private val fakeRequest        = FakeRequest("GET", "/eori-history")
   private val eoriHistoryService = new EoriHistoryService
-  private val controller = new EoriHistoryController(eoriHistoryService, Helpers.stubControllerComponents())
+  private val controller         = new EoriHistoryController(eoriHistoryService, Helpers.stubControllerComponents())
 
-  "GET /eori-history" should:
-    "return 200" in:
+  "GET /eori-history" should {
+    "return 200" in {
       val result = controller.eoriHistory()(fakeRequest)
       status(result) shouldBe Status.OK
+    }
+  }
+}
