@@ -14,20 +14,20 @@
  * limitations under the License.
  */
 
-package services
+package uk.gov.hmrc.tradereportingextractsstub.controllers.epid
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.wordspec.AnyWordSpec
-import play.api.libs.json.Json
-import uk.gov.hmrc.tradereportingextractsstub.services.SchemaValidator
+import org.scalatestplus.mockito.MockitoSugar
+import play.api.libs.json.{JsValue, Json}
 
-class SchemaValidatorSpec extends AnyWordSpec with Matchers {
+class SchemaValidatorSpec extends AnyWordSpec with Matchers with MockitoSugar {
+
+  object TestSchemaValidator extends SchemaValidator
 
   "SchemaValidator" should {
-
-    "validate a correct JSON" in {
-      val schemaValidator = new SchemaValidator()
-      val validJson = Json.parse(
+    "return Right(true) for valid JSON" in {
+      val validJson: JsValue = Json.parse(
         """
           |{
           |  "requestID": "CC12345678",
@@ -39,28 +39,24 @@ class SchemaValidatorSpec extends AnyWordSpec with Matchers {
           |  "startDate": "2024-10-10",
           |  "endDate": "2024-11-09"
           |}
-        """.stripMargin)
+        """.stripMargin
+      )
 
-      schemaValidator.isJsonValid(validJson) shouldBe Right(true)
+      TestSchemaValidator.isJsonValid(validJson) shouldBe Right(true)
     }
 
-    "invalidate an incorrect JSON" in {
-      val schemaValidator = new SchemaValidator()
-      val invalidJson = Json.parse(
+    "return Left with schema location for invalid JSON" in {
+      val invalidJson: JsValue = Json.parse(
         """
           |{
           |  "requestID": "CC12345678",
-          |  "requestTimestamp": "2024-11-27T17:48:19.123Z",
-          |  "reportTypeName": "IMPORTS-ITEM-REPORT",
-          |  "requesterEori": "GB111111111000",
-          |  "eori": ["GB123456789", "FR987654321"],
-          |  "eoriRole": "DECLARANT",
-          |  "startDate": "2024-10-1022",
-          |  "endDate": "2024-11-0922"
+          |  "requestTimestamp": "2024-11-27T17:48:19.123Z"
           |}
-        """.stripMargin)
+        """.stripMargin
+      )
 
-      schemaValidator.isJsonValid(invalidJson).isLeft shouldBe true
+      val result = TestSchemaValidator.isJsonValid(invalidJson)
+      result.swap.getOrElse("") should not be empty
     }
   }
 }

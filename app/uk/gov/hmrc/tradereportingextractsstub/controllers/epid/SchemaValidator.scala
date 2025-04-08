@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.tradereportingextractsstub.services
-
+package uk.gov.hmrc.tradereportingextractsstub.controllers.epid
 
 import com.google.inject.Inject
-import org.everit.json.schema.Schema
+import org.everit.json.schema.{Schema, ValidationException}
 import org.everit.json.schema.loader.SchemaLoader
-import org.everit.json.schema.ValidationException
 import org.json.{JSONObject, JSONTokener}
 import play.api.Logger
 import play.api.libs.json.{JsValue, Json}
+
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
-class SchemaValidator @Inject() {
+trait SchemaValidator @Inject() {
 
   private val logger: Logger = Logger(this.getClass)
 
@@ -39,11 +38,11 @@ class SchemaValidator @Inject() {
 
   def isJsonValid(json: JsValue): Either[String, Boolean] =
     Try(requestSchema.validate(new JSONObject(Json.stringify(json)))) match {
-      case Success(_) => Right(true)
+      case Success(_)                      => Right(true)
       case Failure(e: ValidationException) =>
         logger.debug(s"Json request is not valid: ${e.getSchemaLocation.split("/").last} + and + $e")
         Left(e.getSchemaLocation.split("/").last)
-      case Failure(e) =>
+      case Failure(e)                      =>
         logger.debug(s"Json request is not valid:  + and + $e")
         Left(e.getMessage)
     }

@@ -19,19 +19,17 @@ package uk.gov.hmrc.tradereportingextractsstub.controllers.epid
 import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import uk.gov.hmrc.tradereportingextractsstub.services.{DateTimeService, SchemaValidator, UuidIdService, ValidationService}
 import javax.inject.{Inject, Singleton}
 
 @Singleton
 class EpidReportController @Inject() (
-                                       schemaValidator: SchemaValidator,
-                                       override val controllerComponents: ControllerComponents
-                                     ) extends BackendController(controllerComponents) {
+  cc: ControllerComponents
+) extends BackendController(cc)
+    with SchemaValidator {
 
   def handleRequest(): Action[JsValue] = Action(parse.json) { request =>
-
-    schemaValidator.isJsonValid(request.body) match {
-      case Right(_) =>
+    isJsonValid(request.body) match {
+      case Right(_)           =>
         Accepted(Json.toJson("Accepted"))
       case Left(errorMessage) =>
         BadRequest(Json.toJson(errorMessage))
