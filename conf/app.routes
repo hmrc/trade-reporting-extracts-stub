@@ -3,3 +3,8 @@
 GET        /eori/company-information                   uk.gov.hmrc.tradereportingextractsstub.controllers.CompanyInformationController.companyInformation()
 GET        /eori/verified-email                        uk.gov.hmrc.tradereportingextractsstub.controllers.NotificationEmailController.notificationEmail()
 GET        /eori/eori-history                          uk.gov.hmrc.tradereportingextractsstub.controllers.EoriHistoryController.eoriHistory()
+
+
+
+# TRE service - Request to CDAP via EIS
+PUT        /traderreportingextract/v1/request          uk.gov.hmrc.tradereportingextractsstub.controllers.epid.EpidReportController.handleRequest()
