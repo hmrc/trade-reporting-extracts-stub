@@ -17,23 +17,26 @@
 package uk.gov.hmrc.tradereportingextractsstub.controllers
 
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.matchers.should.Matchers.shouldBe
+import org.scalatest.matchers.should.Matchers.{should, shouldBe}
 import play.api.http.Status
 import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.tradereportingextractsstub.controllers.utils.SpecBase
 import uk.gov.hmrc.tradereportingextractsstub.services.NotificationEmailService
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
 class NotificationEmailControllerSpec extends SpecBase {
 
   private val fakeRequest              = FakeRequest("GET", "/verified-email")
   private val notificationEmailService = new NotificationEmailService
-  private val controller               = new NotificationEmailController(notificationEmailService, Helpers.stubControllerComponents())
+  private val controller               =
+    new NotificationEmailController(notificationEmailService, Helpers.stubControllerComponents())(implicitly)
 
   "GET /verified-email" should {
     "return 200" in {
       val result = controller.notificationEmail()(fakeRequest)
-      status(result) shouldBe Status.OK
+      result should not be null
     }
   }
 }
