@@ -42,7 +42,7 @@ class NotificationEmailControllerSpec extends SpecBase {
           FakeHeaders(Seq(CONTENT_TYPE -> JSON)),
           Json.obj("eori" -> "GB123456789012")
         )
-      val result = controller.notificationEmail()(fakeRequest)
+      val result      = controller.notificationEmail()(fakeRequest)
       result should not be null
     }
   }

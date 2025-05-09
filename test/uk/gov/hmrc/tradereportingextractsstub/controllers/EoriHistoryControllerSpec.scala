@@ -41,7 +41,7 @@ class EoriHistoryControllerSpec extends SpecBase {
           FakeHeaders(Seq(CONTENT_TYPE -> JSON)),
           Json.obj("eori" -> "GB123456789012")
         )
-      val result = controller.eoriHistory()(fakeRequest)
+      val result      = controller.eoriHistory()(fakeRequest)
       status(result) shouldBe Status.OK
     }
   }
