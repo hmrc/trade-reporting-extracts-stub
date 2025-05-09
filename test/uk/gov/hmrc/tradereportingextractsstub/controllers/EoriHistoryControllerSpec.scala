@@ -19,19 +19,29 @@ package uk.gov.hmrc.tradereportingextractsstub.controllers
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.shouldBe
 import play.api.http.Status
+import play.api.libs.json.Json
 import play.api.test.Helpers.*
-import play.api.test.{FakeRequest, Helpers}
+import play.api.test.{FakeHeaders, FakeRequest, Helpers}
 import uk.gov.hmrc.tradereportingextractsstub.controllers.utils.SpecBase
 import uk.gov.hmrc.tradereportingextractsstub.services.EoriHistoryService
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
 class EoriHistoryControllerSpec extends SpecBase {
-  private val fakeRequest        = FakeRequest("GET", "/eori-history")
   private val eoriHistoryService = new EoriHistoryService
-  private val controller         = new EoriHistoryController(eoriHistoryService, Helpers.stubControllerComponents())
+  private val controller         =
+    new EoriHistoryController(eoriHistoryService, Helpers.stubControllerComponents())(implicitly)
 
   "GET /eori-history" should {
     "return 200" in {
-      val result = controller.eoriHistory()(fakeRequest)
+      val fakeRequest =
+        FakeRequest(
+          "GET",
+          s"/eori-history",
+          FakeHeaders(Seq(CONTENT_TYPE -> JSON)),
+          Json.obj("eori" -> "GB123456789012")
+        )
+      val result      = controller.eoriHistory()(fakeRequest)
       status(result) shouldBe Status.OK
     }
   }

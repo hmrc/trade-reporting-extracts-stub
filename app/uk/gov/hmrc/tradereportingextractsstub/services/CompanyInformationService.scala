@@ -24,7 +24,7 @@ import uk.gov.hmrc.tradereportingextractsstub.models.{AddressInformation, Allowe
 class CompanyInformationService extends AllowedEoris:
 
   def companyInformation(eori: String): Result =
-    if !allowedEoris.contains(eori) then return Forbidden
+    if !allowedEoris.contains(eori) then return Forbidden("EORI not allowed")
     val res = CompanyInformation(
       "ABC Company",
       "1",

@@ -25,7 +25,6 @@ import scala.concurrent.ExecutionContext.Implicits.global
 
 class CompanyInformationControllerSpec extends SpecBase {
 
-  private val fakeRequest               = FakeRequest("GET", "/company-information")
   private val companyInformationService = new CompanyInformationService
   private val controller                =
     new CompanyInformationController(companyInformationService, Helpers.stubControllerComponents())(implicitly)
