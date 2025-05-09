@@ -26,7 +26,7 @@ import java.time.LocalDateTime
 class NotificationEmailService extends AllowedEoris:
 
   def notificationEmail(eori: String): Result =
-    if !allowedEoris.contains(eori) then return Forbidden
+    if !allowedEoris.contains(eori) then return Forbidden("EORI not allowed")
     val res = NotificationEmail(
       "example@test.com",
       LocalDateTime.now()
