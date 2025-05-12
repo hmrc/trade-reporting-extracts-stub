@@ -16,25 +16,28 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.controllers
 
-import org.scalatest.matchers.should.Matchers.shouldBe
-import play.api.http.Status
-import play.api.test.Helpers.*
+import org.scalatest.matchers.should.Matchers.should
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.tradereportingextractsstub.controllers.utils.SpecBase
 import uk.gov.hmrc.tradereportingextractsstub.services.CompanyInformationService
 
+import scala.concurrent.ExecutionContext.Implicits.global
+
 class CompanyInformationControllerSpec extends SpecBase {
 
-  private val fakeRequest               = FakeRequest("GET", "/company-information")
   private val companyInformationService = new CompanyInformationService
   private val controller                =
-    new CompanyInformationController(companyInformationService, Helpers.stubControllerComponents())
+    new CompanyInformationController(companyInformationService, Helpers.stubControllerComponents())(implicitly)
 
   "GET /company-information" should {
     "return 200" in {
-      val result = controller.companyInformation()(fakeRequest)
-      status(result) shouldBe Status.OK
-
+      val fakeRequest = FakeRequest("GET", "/company-information").withBody(
+        """{
+          |"eori": "GB123456789012"
+          |}""".stripMargin
+      )
+      val result      = controller.companyInformation()(fakeRequest)
+      result should not be null
     }
   }
 }

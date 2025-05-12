@@ -16,19 +16,23 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.controllers
 
+import play.api.libs.json.JsValue
+import play.api.mvc.{Action, ControllerComponents, Request}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.tradereportingextractsstub.services.CompanyInformationService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton()
 class CompanyInformationController @Inject() (
   companyInformationService: CompanyInformationService,
   cc: ControllerComponents
-) extends BackendController(cc):
+)(implicit ec: ExecutionContext)
+    extends BackendController(cc):
 
-  def companyInformation(): Action[AnyContent] = Action.async { implicit request =>
-    Future.successful(companyInformationService.companyInformation())
+  def companyInformation(): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue] =>
+    val jsonBody  = request.body
+    val eoriValue = (jsonBody \ "eori").asOpt[String].getOrElse("defaultValue")
+    Future(companyInformationService.companyInformation(eoriValue))
   }

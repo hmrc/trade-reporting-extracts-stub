@@ -14,21 +14,18 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.tradereportingextractsstub.services
+package uk.gov.hmrc.tradereportingextractsstub.models
 
-import play.api.libs.json.Json
-import play.api.mvc.Result
-import play.api.mvc.Results.{Forbidden, Ok}
-import uk.gov.hmrc.tradereportingextractsstub.models.{AllowedEoris, NotificationEmail}
-
-import java.time.LocalDateTime
-
-class NotificationEmailService extends AllowedEoris:
-
-  def notificationEmail(eori: String): Result =
-    if !allowedEoris.contains(eori) then return Forbidden("EORI not allowed")
-    val res = NotificationEmail(
-      "example@test.com",
-      LocalDateTime.now()
-    )
-    Ok(Json.toJson(res))
+trait AllowedEoris {
+  val allowedEoris: Seq[String] = Seq(
+    "GB123456789012",
+    "GB123456789013",
+    "GB123456789014",
+    "GB123456789015",
+    "GB123456789016",
+    "GB123456789017",
+    "GB123456789018",
+    "GB123456789019",
+    "GB123456789020"
+  )
+}

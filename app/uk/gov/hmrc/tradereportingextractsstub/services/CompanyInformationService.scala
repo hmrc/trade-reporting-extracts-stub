@@ -18,12 +18,13 @@ package uk.gov.hmrc.tradereportingextractsstub.services
 
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import play.api.mvc.Results.Ok
-import uk.gov.hmrc.tradereportingextractsstub.models.{AddressInformation, CompanyInformation}
+import play.api.mvc.Results.{Forbidden, Ok}
+import uk.gov.hmrc.tradereportingextractsstub.models.{AddressInformation, AllowedEoris, CompanyInformation}
 
-class CompanyInformationService:
+class CompanyInformationService extends AllowedEoris:
 
-  def companyInformation(): Result =
+  def companyInformation(eori: String): Result =
+    if !allowedEoris.contains(eori) then return Forbidden("EORI not allowed")
     val res = CompanyInformation(
       "ABC Company",
       "1",

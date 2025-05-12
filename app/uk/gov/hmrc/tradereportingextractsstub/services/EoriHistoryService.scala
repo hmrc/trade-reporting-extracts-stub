@@ -18,11 +18,12 @@ package uk.gov.hmrc.tradereportingextractsstub.services
 
 import play.api.libs.json.Json
 import play.api.mvc.Result
-import play.api.mvc.Results.Ok
-import uk.gov.hmrc.tradereportingextractsstub.models.{EoriHistoryResponse, EoriPeriod}
+import play.api.mvc.Results.{Forbidden, Ok}
+import uk.gov.hmrc.tradereportingextractsstub.models.{AllowedEoris, EoriHistoryResponse, EoriPeriod}
 
-class EoriHistoryService:
-  def eoriHistory(): Result = {
+class EoriHistoryService extends AllowedEoris:
+  def eoriHistory(eori: String): Result = {
+    if !allowedEoris.contains(eori) then return Forbidden("EORI not allowed")
     val eori1: String       = "EORI00000001"
     val eori2: String       = "EORI00000002"
     val period1: EoriPeriod = EoriPeriod(eori1, Some("2001-01-20T00:00:00Z"), None)
