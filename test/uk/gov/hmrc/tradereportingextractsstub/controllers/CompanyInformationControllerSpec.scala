@@ -18,8 +18,9 @@ package uk.gov.hmrc.tradereportingextractsstub.controllers
 
 import org.scalatest.matchers.should.Matchers.should
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.tradereportingextractsstub.controllers.utils.SpecBase
+import uk.gov.hmrc.tradereportingextractsstub.controllers.CompanyInformationController
 import uk.gov.hmrc.tradereportingextractsstub.services.CompanyInformationService
+import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
 
 import scala.concurrent.ExecutionContext.Implicits.global
 

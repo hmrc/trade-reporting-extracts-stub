@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.tradereportingextractsstub.controllers.utils
+package uk.gov.hmrc.tradereportingextractsstub.utils
 
 import com.codahale.metrics.MetricRegistry
 import org.apache.pekko.stream.Materializer

@@ -14,36 +14,35 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.tradereportingextractsstub.controllers.epid
+package uk.gov.hmrc.tradereportingextractsstub.utils
 
-import com.google.inject.Inject
-import org.everit.json.schema.{Schema, ValidationException}
 import org.everit.json.schema.loader.SchemaLoader
+import org.everit.json.schema.{Schema, ValidationException}
 import org.json.{JSONObject, JSONTokener}
 import play.api.Logger
 import play.api.libs.json.{JsValue, Json}
-
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
-trait SchemaValidator @Inject() {
+class SchemaValidator {
+  val logger: Logger = Logger(this.getClass)
 
-  private val logger: Logger = Logger(this.getClass)
-
-  private val requestSchema: Schema = {
-    val resource = getClass.getResourceAsStream("/schemas/API1Request.json")
+  def loadSchema(stringPath: String): Schema = {
+    val resource = getClass.getResourceAsStream(stringPath)
     val json     = new JSONObject(new JSONTokener(Source.fromInputStream(resource).mkString))
     SchemaLoader.load(json)
   }
 
-  def isJsonValid(json: JsValue): Either[String, Boolean] =
-    Try(requestSchema.validate(new JSONObject(Json.stringify(json)))) match {
+  def validateJson(schema: Schema, json: JsValue): Either[String, Boolean] =
+    Try(schema.validate(new JSONObject(Json.stringify(json)))) match {
       case Success(_)                      => Right(true)
       case Failure(e: ValidationException) =>
-        logger.debug(s"Json request is not valid: ${e.getSchemaLocation.split("/").last} + and + $e")
-        Left(e.getSchemaLocation.split("/").last)
+        val errorLocation = e.getSchemaLocation.split("/").last
+        logger.debug(s"JSON validation failed at $errorLocation: $e")
+        Left(errorLocation)
       case Failure(e)                      =>
-        logger.debug(s"Json request is not valid:  + and + $e")
+        logger.debug(s"Unexpected error during JSON validation: $e")
         Left(e.getMessage)
     }
+
 }
