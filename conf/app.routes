@@ -7,4 +7,4 @@ GET        /eori/eori-history                          uk.gov.hmrc.tradereportin
 
 
 # TRE service - Request to CDAP via EIS
-PUT        /traderreportingextract/v1/request          uk.gov.hmrc.tradereportingextractsstub.controllers.epid.EpidReportController.handleRequest()
+PUT        /traderreportingextract/v1/request          uk.gov.hmrc.tradereportingextractsstub.controllers.EpidReportController.handleRequest()
