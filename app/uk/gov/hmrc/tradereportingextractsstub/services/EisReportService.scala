@@ -24,7 +24,7 @@ import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
 
 @Singleton
-class EpidReportService @Inject() (
+class EisReportService @Inject() (
   statusUpdateService: StatusNotificationService,
   schemaValidator: SchemaValidator
 ) extends Logging {

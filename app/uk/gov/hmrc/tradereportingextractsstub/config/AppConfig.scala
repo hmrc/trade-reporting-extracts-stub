@@ -16,14 +16,16 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.config
 
-import javax.inject.{Inject, Singleton}
 import play.api.Configuration
 import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
+
+import javax.inject.{Inject, Singleton}
 
 @Singleton
 class AppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig):
   val appName: String                        = configuration.get[String]("appName")
   val host: String                           = configuration.get[String]("host")
-  val statusNotificationDelay                = configuration.get[Int]("notificationDelay")
+  val statusNotificationDelay: Int           = configuration.get[Int]("notificationDelay")
   lazy val tradeReportingExtractsApi: String = servicesConfig.baseUrl("trade-reporting-extracts") +
     configuration.get[String]("microservice.services.trade-reporting-extracts.context")
+  lazy val eisAuthToken: String              = configuration.get[String]("eis.auth.token")

@@ -1,10 +1,15 @@
 # microservice specific routes
 
-GET        /eori/company-information                   uk.gov.hmrc.tradereportingextractsstub.controllers.CompanyInformationController.companyInformation()
-GET        /eori/verified-email                        uk.gov.hmrc.tradereportingextractsstub.controllers.NotificationEmailController.notificationEmail()
-GET        /eori/eori-history                          uk.gov.hmrc.tradereportingextractsstub.controllers.EoriHistoryController.eoriHistory()
+GET     /eori/company-information                   uk.gov.hmrc.tradereportingextractsstub.controllers.CompanyInformationController.companyInformation()
+GET     /eori/verified-email                        uk.gov.hmrc.tradereportingextractsstub.controllers.NotificationEmailController.notificationEmail()
+GET     /eori/eori-history                          uk.gov.hmrc.tradereportingextractsstub.controllers.EoriHistoryController.eoriHistory()
 
 
 
 # TRE service - Request to CDAP via EIS
-PUT        /traderreportingextract/v1/request          uk.gov.hmrc.tradereportingextractsstub.controllers.EpidReportController.handleRequest()
+PUT     /gbe/requesttraderreport/v1                 uk.gov.hmrc.tradereportingextractsstub.controllers.EisReportController.requestTraderReport()
+GET     /gbe/requesttraderreport/v1                 uk.gov.hmrc.tradereportingextractsstub.controllers.EisReportController.serverOtherMethods()
+POST     /gbe/requesttraderreport/v1                 uk.gov.hmrc.tradereportingextractsstub.controllers.EisReportController.serverOtherMethods()
+DELETE     /gbe/requesttraderreport/v1                 uk.gov.hmrc.tradereportingextractsstub.controllers.EisReportController.serverOtherMethods()
+
+GET     /*                                          uk.gov.hmrc.tradereportingextractsstub.controllers.EisReportController.serverOthers()

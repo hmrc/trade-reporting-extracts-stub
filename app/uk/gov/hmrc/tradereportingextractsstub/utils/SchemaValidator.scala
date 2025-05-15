@@ -25,7 +25,6 @@ import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
 class SchemaValidator {
-  val logger: Logger = Logger(this.getClass)
 
   def loadSchema(stringPath: String): Schema = {
     val resource = getClass.getResourceAsStream(stringPath)
@@ -38,10 +37,8 @@ class SchemaValidator {
       case Success(_)                      => Right(true)
       case Failure(e: ValidationException) =>
         val errorLocation = e.getSchemaLocation.split("/").last
-        logger.debug(s"JSON validation failed at $errorLocation: $e")
         Left(errorLocation)
       case Failure(e)                      =>
-        logger.debug(s"Unexpected error during JSON validation: $e")
         Left(e.getMessage)
     }
 
