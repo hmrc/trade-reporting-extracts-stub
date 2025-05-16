@@ -19,8 +19,8 @@ package uk.gov.hmrc.tradereportingextractsstub.utils
 import org.everit.json.schema.loader.SchemaLoader
 import org.everit.json.schema.{Schema, ValidationException}
 import org.json.{JSONObject, JSONTokener}
-import play.api.Logger
 import play.api.libs.json.{JsValue, Json}
+
 import scala.io.Source
 import scala.util.{Failure, Success, Try}
 
