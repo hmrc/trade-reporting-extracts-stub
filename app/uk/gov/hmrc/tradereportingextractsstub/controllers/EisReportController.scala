@@ -16,14 +16,13 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.controllers
 
-import play.api.libs.json.{JsValue, Json, Writes}
+import play.api.libs.json.{JsValue, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Request}
 import sttp.model.MediaType.ApplicationJson
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.tradereportingextractsstub.config.AppConfig
-import uk.gov.hmrc.tradereportingextractsstub.models.MissingRequiredParameterException
 import uk.gov.hmrc.tradereportingextractsstub.models.eis.*
 import uk.gov.hmrc.tradereportingextractsstub.models.eis.EisReportRequestHeaders.*
 import uk.gov.hmrc.tradereportingextractsstub.services.EisReportService
@@ -42,38 +41,37 @@ class EisReportController @Inject() (
 
   def requestTraderReport(): Action[JsValue] = Action.async(parse.json) { request =>
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequest(request)
-    eisReportService.isJsonValid(request.body, hc).map {
-      case Left(errorMessage: String) =>
-        BadRequest(buildBadRequestBodyResponse(request, List(errorMessage))).withHeaders(
+    val missingHeaders             =
+      EisReportRequestHeaders.allHeaders.filterNot(header => request.headers.get(header).isDefined)
+    if missingHeaders.nonEmpty then {
+      Future.successful(
+        BadRequest(buildBadRequestHeaderResponse(request, missingHeaders)).withHeaders(
           ContentType.toString    -> ApplicationJson.toString(),
           Date.toString           -> getCurrentHttpDate,
           XCorrelationID.toString -> request.headers.get(XCorrelationID.toString).getOrElse("")
         )
-      case Right(_)                   =>
-        val missingHeaders =
-          EisReportRequestHeaders.allHeaders.filterNot(header => request.headers.get(header).isDefined)
-        if missingHeaders.nonEmpty then {
-          Future.successful(
-            BadRequest(buildBadRequestHeaderResponse(request, missingHeaders)).withHeaders(
-              ContentType.toString    -> ApplicationJson.toString(),
-              Date.toString           -> getCurrentHttpDate,
-              XCorrelationID.toString -> request.headers.get(XCorrelationID.toString).getOrElse("")
-            )
-          )
-        }
-        if !request.headers.get(Authorization.toString).getOrElse("").equals(appConfig.eisAuthToken) then {
-          Future.successful(
-            Forbidden.withHeaders(
-              Date.toString           -> getCurrentHttpDate,
-              XCorrelationID.toString -> request.headers.get(XCorrelationID.toString).getOrElse("")
-            )
-          )
-        }
-        NoContent.withHeaders(
-          Date.toString -> getCurrentHttpDate,
+      )
+    } else if !request.headers.get(Authorization.toString).getOrElse("").equals(appConfig.eisAuthToken) then {
+      Future.successful(
+        Forbidden.withHeaders(
+          Date.toString           -> getCurrentHttpDate,
           XCorrelationID.toString -> request.headers.get(XCorrelationID.toString).getOrElse("")
         )
-    }
+      )
+    } else
+      eisReportService.isJsonValid(request.body, hc).map {
+        case Left(errorMessage: String) =>
+          BadRequest(buildBadRequestBodyResponse(request, List(errorMessage))).withHeaders(
+            ContentType.toString    -> ApplicationJson.toString(),
+            Date.toString           -> getCurrentHttpDate,
+            XCorrelationID.toString -> request.headers.get(XCorrelationID.toString).getOrElse("")
+          )
+        case Right(_)                   =>
+          NoContent.withHeaders(
+            Date.toString           -> getCurrentHttpDate,
+            XCorrelationID.toString -> request.headers.get(XCorrelationID.toString).getOrElse("")
+          )
+      }
   }
 
   private def buildBadRequestBodyResponse(request: Request[JsValue], errors: List[String])           =
