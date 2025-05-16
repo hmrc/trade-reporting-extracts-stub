@@ -18,12 +18,11 @@ package uk.gov.hmrc.tradereportingextractsstub.controllers
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.{should, shouldBe}
-import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.test.Helpers.*
 import play.api.test.{FakeHeaders, FakeRequest, Helpers}
-import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
 import uk.gov.hmrc.tradereportingextractsstub.services.NotificationEmailService
+import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
