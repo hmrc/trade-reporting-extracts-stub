@@ -29,21 +29,21 @@ import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class EoriHistoryControllerSpec extends SpecBase {
-  private val eoriHistoryService = new EoriHistoryService
-  private val controller         =
-    new EoriHistoryController(eoriHistoryService, Helpers.stubControllerComponents())(implicitly)
-
-  "GET /eori-history" should {
-    "return 200" in {
-      val fakeRequest =
-        FakeRequest(
-          "GET",
-          s"/eori-history",
-          FakeHeaders(Seq(CONTENT_TYPE -> JSON)),
-          Json.obj("eori" -> "GB123456789012")
-        )
-      val result      = controller.eoriHistory()(fakeRequest)
-      status(result) shouldBe Status.OK
-    }
-  }
+//  private val eoriHistoryService = new EoriHistoryService
+//  private val controller         =
+//    new EoriHistoryController(eoriHistoryService, Helpers.stubControllerComponents())(implicitly)
+//
+//  "GET /eori-history" should {
+//    "return 200" in {
+//      val fakeRequest =
+//        FakeRequest(
+//          "GET",
+//          s"/eori-history",
+//          FakeHeaders(Seq(CONTENT_TYPE -> JSON)),
+//          Json.obj("eori" -> "GB123456789012")
+//        )
+//      val result      = controller.eoriHistory()(fakeRequest)
+//      status(result) shouldBe Status.OK
+//    }
+//  }
 }

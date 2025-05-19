@@ -16,18 +16,36 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.services
 
+import play.api.i18n.Lang.logger
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.mvc.Results.{Forbidden, Ok}
-import uk.gov.hmrc.tradereportingextractsstub.models.{AllowedEoris, EoriHistoryResponse, EoriPeriod}
+import uk.gov.hmrc.tradereportingextractsstub.models.{AllowedEoris, EoriHistory}
 
-class EoriHistoryService extends AllowedEoris:
-  def eoriHistory(eori: String): Result = {
-    if !allowedEoris.contains(eori) then return Forbidden("EORI not allowed")
-    val eori1: String       = "EORI00000001"
-    val eori2: String       = "EORI00000002"
-    val period1: EoriPeriod = EoriPeriod(eori1, Some("2001-01-20T00:00:00Z"), None)
-    val period2: EoriPeriod = EoriPeriod(eori2, Some("2002-01-20T00:00:00Z"), None)
+import java.nio.file.{Files, Paths}
+import javax.inject.Inject
+import scala.util.{Failure, Success, Try}
 
-    Ok(Json.toJson(EoriHistoryResponse(Seq(period1, period2))))
-  }
+class EoriHistoryService @Inject() () extends AllowedEoris {
+
+  private val reportsPath: String = "conf/response/EoriHistoricalData.json"
+
+  def eoriHistory(eori: String): Result =
+    if (!allowedEoris.contains(eori)) {
+      Forbidden("EORI not allowed")
+    } else {
+      loadReportsFromFile(reportsPath) match {
+        case Success(reports) => Ok(Json.toJson(reports))
+        case Failure(ex)      =>
+          val errMsg = s"Failed to load reports from file: ${ex.getMessage}"
+          logger.error(errMsg)
+          Forbidden(errMsg)
+      }
+    }
+
+  private def loadReportsFromFile(path: String): Try[EoriHistoryResponse] =
+    Try {
+      val jsonString = Files.readString(Paths.get(path))
+      Json.parse(jsonString).as[EoriHistoryResponse]
+    }
+}
