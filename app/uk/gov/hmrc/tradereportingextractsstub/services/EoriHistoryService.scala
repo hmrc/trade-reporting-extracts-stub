@@ -20,7 +20,7 @@ import play.api.i18n.Lang.logger
 import play.api.libs.json.Json
 import play.api.mvc.Result
 import play.api.mvc.Results.{Forbidden, Ok}
-import uk.gov.hmrc.tradereportingextractsstub.models.{AllowedEoris, EoriHistory}
+import uk.gov.hmrc.tradereportingextractsstub.models.{AllowedEoris, EoriHistory, EoriHistoryResponse}
 
 import java.nio.file.{Files, Paths}
 import javax.inject.Inject
@@ -35,7 +35,7 @@ class EoriHistoryService @Inject() () extends AllowedEoris {
       Forbidden("EORI not allowed")
     } else {
       loadReportsFromFile(reportsPath) match {
-        case Success(reports) => Ok(Json.toJson(reports))
+        case Success(reports) => Ok(Json.toJson(EoriHistoryResponse(reports)))
         case Failure(ex)      =>
           val errMsg = s"Failed to load reports from file: ${ex.getMessage}"
           logger.error(errMsg)
@@ -43,9 +43,9 @@ class EoriHistoryService @Inject() () extends AllowedEoris {
       }
     }
 
-  private def loadReportsFromFile(path: String): Try[EoriHistoryResponse] =
+  private def loadReportsFromFile(path: String): Try[Seq[EoriHistory]] =
     Try {
       val jsonString = Files.readString(Paths.get(path))
-      Json.parse(jsonString).as[EoriHistoryResponse]
+      Json.parse(jsonString).as[Seq[EoriHistory]]
     }
 }
