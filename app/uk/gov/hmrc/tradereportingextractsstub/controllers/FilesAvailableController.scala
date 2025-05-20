@@ -20,10 +20,10 @@ import play.api.libs.json.*
 import play.api.mvc.*
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders
-import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders.*
-import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FileAvailable
 import uk.gov.hmrc.tradereportingextractsstub.config.AppConfig
+import uk.gov.hmrc.tradereportingextractsstub.models.AllowedEoris
+import uk.gov.hmrc.tradereportingextractsstub.models.sdes.{FilesAvailable, FilesAvailableHeaders}
+import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -33,9 +33,10 @@ class FilesAvailableController @Inject() (
   cc: ControllerComponents,
   appConfig: AppConfig
 )(using ec: ExecutionContext)
-    extends AbstractController(cc) {
+    extends AbstractController(cc)
+    with AllowedEoris {
 
-  def filesAvailable(): Action[AnyContent] = Action.async { request =>
+  def filesAvailable(eori: String): Action[AnyContent] = Action.async { request =>
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequest(request)
 
     def missingHeaders: Seq[String] =
@@ -44,24 +45,14 @@ class FilesAvailableController @Inject() (
     def isAuthorized: Boolean =
       request.headers.get(Authorization.toString).contains(appConfig.sdesAuthToken)
 
-    (missingHeaders, isAuthorized, request.body.asJson) match {
-      case (headers, _, _) if headers.nonEmpty =>
+    (missingHeaders, isAuthorized) match {
+      case (headers, _) if headers.nonEmpty =>
         Future.successful(BadRequest(s"Failed header validation: Missing headers: ${headers.mkString(", ")}"))
-      case (_, false, _)                       =>
-        Future.successful(Forbidden)
-      case (_, _, None)                        =>
-        Future.successful(BadRequest("Expected application/json request body"))
-      case (_, _, Some(json))                  =>
-        json.validate[FileAvailable] match {
-          case JsSuccess(_, _) => Future.successful(Created)
-          case JsError(errors) =>
-            val errorMessage = errors
-              .map { case (path, validationErrors) =>
-                s"Invalid value at path $path: ${validationErrors.map(_.message).mkString(", ")}"
-              }
-              .mkString(", ")
-            Future.successful(BadRequest(errorMessage))
-        }
+      case (_, false)                       =>
+        Future.successful(Forbidden(s"Authorization header is missing or invalid"))
+      case (_, _)                           =>
+        if !allowedEoris.contains(eori) then return Forbidden("EORI not allowed")
+        else Future.successful(jsonResourceAsResponse("responses/FilesAvailableResponse.json"))
     }
   }
 }

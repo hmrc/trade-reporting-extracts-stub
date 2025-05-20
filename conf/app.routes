@@ -13,3 +13,5 @@ POST          /gbe/requesttraderreport/v1        uk.gov.hmrc.tradereportingextra
 DELETE        /gbe/requesttraderreport/v1        uk.gov.hmrc.tradereportingextractsstub.controllers.EisReportController.serverOtherMethods()
 
 GET           /invalid                           uk.gov.hmrc.tradereportingextractsstub.controllers.EisReportController.serverOthers()
+
+GET           /files-available/list/*eori        uk.gov.hmrc.tradereportingextractsstub.controllers.FilesAvailableController.filesAvailable(eori)
