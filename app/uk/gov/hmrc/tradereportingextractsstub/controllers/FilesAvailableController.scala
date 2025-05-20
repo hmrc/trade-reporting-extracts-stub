@@ -20,11 +20,10 @@ import play.api.libs.json.*
 import play.api.mvc.*
 import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
-import uk.gov.hmrc.tradereportingextracts.config.AppConfig
-import uk.gov.hmrc.tradereportingextracts.models.sdes.ReportAvailablePayload
-import uk.gov.hmrc.tradereportingextracts.models.sdes.SdesFileNotificationHeaders.*
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders
+import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders.*
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FileAvailable
+import uk.gov.hmrc.tradereportingextractsstub.config.AppConfig
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
