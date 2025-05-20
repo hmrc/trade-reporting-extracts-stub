@@ -30,5 +30,5 @@ class AppConfig @Inject() (configuration: Configuration, servicesConfig: Service
     configuration.get[String]("microservice.services.trade-reporting-extracts.context")
   lazy val eisAuthToken: String              = configuration.get[String]("eis.auth.token")
 
-  lazy val treXClientId: String       = configuration.get[String]("sdes.client-id")
+  lazy val treXClientId: String       = configuration.get[String]("sdes.x-client-id")
   lazy val treInformationType: String = configuration.get[String]("sdes.information-type")

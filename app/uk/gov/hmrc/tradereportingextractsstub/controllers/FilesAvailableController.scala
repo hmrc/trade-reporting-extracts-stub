@@ -42,15 +42,18 @@ class FilesAvailableController @Inject() (
   def filesAvailable(informationType: String): Action[AnyContent] = Action.async { request =>
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequest(request)
 
-    val xClientId: String = request.headers.get(XClientId).getOrElse("")
-    val eori: String      = request.headers.get(XSdesKey).getOrElse("")
+    val xClientId: String = request.headers.get(XClientId.toString).getOrElse("")
+    val eori: String      = request.headers.get(XSdesKey.toString).getOrElse("")
 
     eori match {
-      case _ if xClientId.isEmpty            => Future.successful(BadRequest("Missing x-client-id header"))
-      case _ if eori.isEmpty                 => Future.successful(BadRequest("Missing x-sdes-key header"))
-      case _ if informationType.isEmpty      => Future.successful(BadRequest("Missing information type"))
-      case _ if !allowedEoris.contains(eori) => Future.successful(Forbidden("EORI not allowed"))
-      case _                                 => Future.successful(jsonResourceAsResponse("resources/FilesAvailableResponse.json"))
+      case _ if xClientId.isEmpty                               => Future.successful(BadRequest("Missing x-client-id header"))
+      case _ if xClientId != appConfig.treXClientId             => Future.successful(Forbidden("Invalid x-client-id header"))
+      case _ if informationType.isEmpty                         => Future.successful(BadRequest("Missing information type"))
+      case _ if informationType != appConfig.treInformationType =>
+        Future.successful(Forbidden("Invalid information type"))
+      case _ if eori.isEmpty                                    => Future.successful(BadRequest("Missing x-sdes-key header"))
+      case _ if !allowedEoris.contains(eori)                    => Future.successful(Forbidden("x-sdes-key/EORI not allowed"))
+      case _                                                    => Future.successful(jsonResourceAsResponse("resources/FilesAvailableResponse.json"))
     }
   }
 }
