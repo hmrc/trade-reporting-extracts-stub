@@ -29,3 +29,4 @@ class AppConfig @Inject() (configuration: Configuration, servicesConfig: Service
   lazy val tradeReportingExtractsApi: String = servicesConfig.baseUrl("trade-reporting-extracts") +
     configuration.get[String]("microservice.services.trade-reporting-extracts.context")
   lazy val eisAuthToken: String              = configuration.get[String]("eis.auth.token")
+  lazy val sdesAuthToken: String             = configuration.get[String]("sdes.auth.token")
