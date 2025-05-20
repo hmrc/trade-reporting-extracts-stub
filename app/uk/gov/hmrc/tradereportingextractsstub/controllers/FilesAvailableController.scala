@@ -24,6 +24,7 @@ import uk.gov.hmrc.tradereportingextractsstub.config.AppConfig
 import uk.gov.hmrc.tradereportingextractsstub.models.AllowedEoris
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.{FilesAvailable, FilesAvailableHeaders}
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders.*
+import uk.gov.hmrc.tradereportingextractsstub.utils.StubResource
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -34,7 +35,8 @@ class FilesAvailableController @Inject() (
   appConfig: AppConfig
 )(using ec: ExecutionContext)
     extends AbstractController(cc)
-    with AllowedEoris {
+    with AllowedEoris
+    with StubResource {
 
   def filesAvailable(eori: String): Action[AnyContent] = Action.async { request =>
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequest(request)
@@ -51,7 +53,7 @@ class FilesAvailableController @Inject() (
       case (_, false)                       =>
         Future.successful(Forbidden(s"Authorization header is missing or invalid"))
       case (_, _)                           =>
-        if !allowedEoris.contains(eori) then return Forbidden("EORI not allowed")
+        if !allowedEoris.contains(eori) then Future.successful(Forbidden("EORI not allowed"))
         else Future.successful(jsonResourceAsResponse("responses/FilesAvailableResponse.json"))
     }
   }
