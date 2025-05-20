@@ -25,6 +25,7 @@ import uk.gov.hmrc.tradereportingextractsstub.models.AllowedEoris
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.{FilesAvailable, FilesAvailableHeaders}
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders.*
 import uk.gov.hmrc.tradereportingextractsstub.utils.StubResource
+import uk.gov.hmrc.tradereportingextractsstub.utils.ApplicationConstants.*
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -38,23 +39,18 @@ class FilesAvailableController @Inject() (
     with AllowedEoris
     with StubResource {
 
-  def filesAvailable(eori: String): Action[AnyContent] = Action.async { request =>
+  def filesAvailable(informationType: String): Action[AnyContent] = Action.async { request =>
     implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequest(request)
 
-    def missingHeaders: Seq[String] =
-      FilesAvailableHeaders.allHeaders.filterNot(header => request.headers.get(header).isDefined)
+    val xClientId: String = request.headers.get(XClientId).getOrElse("")
+    val eori: String      = request.headers.get(XSdesKey).getOrElse("")
 
-    def isAuthorized: Boolean =
-      request.headers.get(Authorization.toString).contains(appConfig.sdesAuthToken)
-
-    (missingHeaders, isAuthorized) match {
-      case (headers, _) if headers.nonEmpty =>
-        Future.successful(BadRequest(s"Failed header validation: Missing headers: ${headers.mkString(", ")}"))
-      case (_, false)                       =>
-        Future.successful(Forbidden(s"Authorization header is missing or invalid"))
-      case (_, _)                           =>
-        if !allowedEoris.contains(eori) then Future.successful(Forbidden("EORI not allowed"))
-        else Future.successful(jsonResourceAsResponse("responses/FilesAvailableResponse.json"))
+    eori match {
+      case _ if xClientId.isEmpty            => Future.successful(BadRequest("Missing x-client-id header"))
+      case _ if eori.isEmpty                 => Future.successful(BadRequest("Missing x-sdes-key header"))
+      case _ if informationType.isEmpty      => Future.successful(BadRequest("Missing information type"))
+      case _ if !allowedEoris.contains(eori) => Future.successful(Forbidden("EORI not allowed"))
+      case _                                 => Future.successful(jsonResourceAsResponse("resources/FilesAvailableResponse.json"))
     }
   }
 }

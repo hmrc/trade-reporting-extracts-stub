@@ -17,12 +17,8 @@
 package uk.gov.hmrc.tradereportingextractsstub.models.sdes
 
 object FilesAvailableHeaders extends Enumeration {
-  val Authorization: Value       = Value("authorization")
-  val ContentType: Value         = Value("content-type")
-  val Date: Value                = Value("date")
-  val XCorrelationID: Value      = Value("x-correlation-id")
-  val XTransmittingSystem: Value = Value("x-transmitting-system")
-  val SourceSystem: Value        = Value("source-system")
+  val XClientId: Value = Value("x-client-id")
+  val XSdesKey: Value  = Value("x-sdes-key")
 
   def allHeaders: List[String] = values.map(_.toString).toList
 }
