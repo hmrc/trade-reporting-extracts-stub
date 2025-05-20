@@ -22,7 +22,7 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.tradereportingextractsstub.config.AppConfig
 import uk.gov.hmrc.tradereportingextractsstub.models.AllowedEoris
-import uk.gov.hmrc.tradereportingextractsstub.models.sdes.{FilesAvailable, FilesAvailableHeaders}
+import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders.*
 import uk.gov.hmrc.tradereportingextractsstub.utils.StubResource
 import uk.gov.hmrc.tradereportingextractsstub.utils.ApplicationConstants.*
@@ -53,7 +53,8 @@ class FilesAvailableController @Inject() (
         Future.successful(Forbidden("Invalid information type"))
       case _ if eori.isEmpty                                    => Future.successful(BadRequest("Missing x-sdes-key header"))
       case _ if !allowedEoris.contains(eori)                    => Future.successful(Forbidden("x-sdes-key/EORI not allowed"))
-      case _                                                    => Future.successful(jsonResourceAsResponse("resources/FilesAvailableResponse.json"))
+      case _                                                    =>
+        Future.successful(jsonResourceAsResponse("resources/FilesAvailableResponse.json", eori))
     }
   }
 }

@@ -16,18 +16,21 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.utils
 
-import play.api.http.ContentTypes.JSON
+import play.api.libs.json.Json
 import play.api.mvc.*
 import play.api.mvc.Results.*
+import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FileAvailable
 
 import scala.io.Source
 import scala.util.Try
 
 trait StubResource {
 
-  def findResource(path: String): Option[String] = Try(Source.fromResource(path).getLines().mkString("\n")).toOption
-
-  def jsonResourceAsResponse(path: String, postProc: String => String = inp => inp): Result =
-    findResource(path).fold[Result](NotFound)(content => Ok(postProc(content)).as(JSON))
-
+  def jsonResourceAsResponse(path: String, eori: String): Result =
+    val jsonStr                            = Try(Source.fromResource(path).mkString).getOrElse {
+      NotFound(s"Resource not found: $path")
+    }
+    val jsonStrWithEori                    = jsonStr.toString.replaceAll("\\{\\{EORI_VALUE}}", eori)
+    val filesAvailable: Seq[FileAvailable] = Json.parse(jsonStrWithEori).as[Seq[FileAvailable]]
+    Ok(Json.toJson(filesAvailable))
 }

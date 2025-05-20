@@ -6,7 +6,7 @@
   "metadata": [
     { "metadata": "RETENTION_DAYS", "value": "30" },
     { "metadata": "FileType", "value": "CSV" },
-    { "metadata": "EORI", "value": "GB0000019" },
+    { "metadata": "EORI", "value": "{{EORI_VALUE}}" },
     { "metadata": "MdtpReportXCorrelationId", "value": "2409398b-ee8f-47cd-b873-ac7ac099c28b" },
     { "metadata": "MdtpReportRequestId", "value": "TRE0019" },
     { "metadata": "MdtpReportTypeName", "value": "Imports-Header" },
@@ -21,7 +21,7 @@
   "metadata": [
     { "metadata": "RETENTION_DAYS", "value": "30" },
     { "metadata": "FileType", "value": "CSV" },
-    { "metadata": "EORI", "value": "GB0000019" },
+    { "metadata": "EORI", "value": "{{EORI_VALUE}}" },
     { "metadata": "MdtpReportXCorrelationId", "value": "2409398b-ee8f-47cd-b873-ac7ac099c28b" },
     { "metadata": "MdtpReportRequestId", "value": "TRE0019" },
     { "metadata": "MdtpReportTypeName", "value": "Imports-Header" },
