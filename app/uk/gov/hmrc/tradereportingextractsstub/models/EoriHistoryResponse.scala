@@ -18,7 +18,7 @@ package uk.gov.hmrc.tradereportingextractsstub.models
 
 import play.api.libs.json.{Json, OFormat}
 
-case class EoriHistoryResponse(eoriHistory: Seq[EoriPeriod])
+case class EoriHistoryResponse(eoriHistory: Seq[EoriHistory])
 
 object EoriHistoryResponse:
   implicit val format: OFormat[EoriHistoryResponse] = Json.format[EoriHistoryResponse]
