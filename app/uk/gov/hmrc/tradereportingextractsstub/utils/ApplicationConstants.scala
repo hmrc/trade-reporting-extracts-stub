@@ -18,6 +18,8 @@ package uk.gov.hmrc.tradereportingextractsstub.utils
 
 object ApplicationConstants {
 
+  val INFORMATION_TYPE = "information-type"
+
   val CorrelationIdKey     = "X-Correlation-ID"
   val SourceSystem         = "Source-System"
   val XTransmittingSystem  = "X-Transmitting-System"
