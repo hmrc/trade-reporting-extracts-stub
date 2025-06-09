@@ -59,18 +59,17 @@ class FilesAvailableController @Inject() (
           case Some(requests) if requests.nonEmpty =>
             val responseJson = generateFilesAvailableJson(eori, requests)
             Future.successful(Ok(responseJson))
-          case _                                     =>
+          case _                                   =>
             Future.successful(BadRequest("Invalid or missing requests in JSON body"))
         }
-        //Future.successful(jsonResourceAsResponse("resources/FilesAvailableResponse.json", eori))
+      // Future.successful(jsonResourceAsResponse("resources/FilesAvailableResponse.json", eori))
     }
   }
 
-
   private def generateFilesAvailableJson(
-                                          eori: String,
-                                          requests: Seq[FileAvailableStubRequest]
-                                        ): JsValue = {
+    eori: String,
+    requests: Seq[FileAvailableStubRequest]
+  ): JsValue = {
     val template = Source.fromResource("resources/FilesAvailableResponse.json").mkString
 
     val allParts = requests.flatMap { req =>
