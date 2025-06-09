@@ -22,10 +22,11 @@ import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.tradereportingextractsstub.config.AppConfig
 import uk.gov.hmrc.tradereportingextractsstub.models.AllowedEoris
-import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders
+import uk.gov.hmrc.tradereportingextractsstub.models.sdes.{FileAvailableStubRequest, FilesAvailableHeaders}
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders.*
 import uk.gov.hmrc.tradereportingextractsstub.utils.StubResource
 import uk.gov.hmrc.tradereportingextractsstub.utils.ApplicationConstants.*
+import scala.io.Source
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.{ExecutionContext, Future}
@@ -54,7 +55,34 @@ class FilesAvailableController @Inject() (
       case _ if eori.isEmpty                                    => Future.successful(BadRequest("Missing x-sdes-key header"))
       case _ if !allowedEoris.contains(eori)                    => Future.successful(Forbidden("x-sdes-key/EORI not allowed"))
       case _                                                    =>
-        Future.successful(jsonResourceAsResponse("resources/FilesAvailableResponse.json", eori))
+        request.body.asJson.flatMap(_.asOpt[Seq[FileAvailableStubRequest]]) match {
+          case Some(requests) if requests.nonEmpty =>
+            val responseJson = generateFilesAvailableJson(eori, requests)
+            Future.successful(Ok(responseJson))
+          case _                                     =>
+            Future.successful(BadRequest("Invalid or missing requests in JSON body"))
+        }
+        //Future.successful(jsonResourceAsResponse("resources/FilesAvailableResponse.json", eori))
     }
+  }
+
+
+  private def generateFilesAvailableJson(
+                                          eori: String,
+                                          requests: Seq[FileAvailableStubRequest]
+                                        ): JsValue = {
+    val template = Source.fromResource("resources/FilesAvailableResponse.json").mkString
+
+    val allParts = requests.flatMap { req =>
+      (1 to req.fileParts).map { partNum =>
+        val replaced = template
+          .replace("{{EORI_VALUE}}", eori)
+          .replace("{{REPORT_ID}}", req.reportRequestId)
+          .replace("{{PART_NUM}}", partNum.toString)
+          .replace("{{TOTAL_PARTS}}", req.fileParts.toString)
+        Json.parse(replaced)
+      }
+    }
+    JsArray(allParts)
   }
 }
