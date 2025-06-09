@@ -19,17 +19,31 @@ package uk.gov.hmrc.tradereportingextractsstub.controllers
 import org.scalatest.matchers.should.Matchers.{should, shouldBe}
 import play.api.Application
 import play.api.http.Status
+import play.api.libs.json.Json
 import play.api.test.Helpers.{GET, route, running, status, writeableOf_AnyContentAsEmpty}
 import play.api.test.{FakeRequest, Helpers}
+import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FileAvailableStubRequest
 import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
+import play.api.test.FakeRequest
+import play.api.test.Helpers.POST
+import play.api.test.Helpers.writeableOf_AnyContentAsJson
 
 class FilesAvailableControllerSpec extends SpecBase {
 
   "GET /files-available/list/GB123456789012" should {
     "return 200" in new Setup {
       running(app) {
+
+        val stubRequest  = FileAvailableStubRequest(
+          reportRequestId = "REPORT_ID_123",
+          fileParts = 2
+        )
+        val stubRequests = Seq(stubRequest)
+        val jsonBody     = Json.toJson(stubRequests)
+
         val request = FakeRequest(GET, routes.FilesAvailableController.filesAvailable("TRE").url)
           .withHeaders("x-client-id" -> "TRE-CLIENT-ID", "x-sdes-key" -> "GB123456789012")
+          .withJsonBody(jsonBody)
         val result  = route(app, request).value
         status(result) shouldBe Status.OK
       }
