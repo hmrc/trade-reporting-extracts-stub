@@ -16,21 +16,21 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.controllers
 
-import play.api.libs.json.JsValue
-import play.api.mvc.{Action, AnyContent, ControllerComponents, Request}
+import play.api.libs.json.Json
+import play.api.mvc.{Action, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
+import uk.gov.hmrc.tradereportingextractsstub.models.EoriRequest
 import uk.gov.hmrc.tradereportingextractsstub.services.EoriHistoryService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @Singleton()
-class EoriHistoryController @Inject() (eoriHistoryService: EoriHistoryService, cc: ControllerComponents)(implicit
-  ec: ExecutionContext
-) extends BackendController(cc):
+class EoriHistoryController @Inject() (eoriHistoryService: EoriHistoryService, cc: ControllerComponents)
+    extends BackendController(cc):
 
-  def eoriHistory(): Action[JsValue] = Action.async(parse.json) { implicit request: Request[JsValue] =>
-    val jsonBody  = request.body
-    val eoriValue = (jsonBody \ "eori").asOpt[String].getOrElse("defaultValue")
-    Future(eoriHistoryService.eoriHistory(eoriValue))
+  def eoriHistory(): Action[EoriRequest] = Action.async(parse.json[EoriRequest]) { implicit request =>
+    val eori        = request.body.eori
+    val eoriHistory = eoriHistoryService.eoriHistory(eori)
+    Future.successful(Ok(Json.toJson(eoriHistory)))
   }

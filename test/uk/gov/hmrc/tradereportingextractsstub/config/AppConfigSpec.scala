@@ -16,28 +16,33 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.config
 
-import org.mockito.Mockito.when
-import org.scalatestplus.mockito.MockitoSugar
 import org.scalatest.matchers.should.Matchers
-import org.scalatest.wordspec.AnyWordSpec
-import play.api.Configuration
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
-import uk.gov.hmrc.tradereportingextractsstub.config.AppConfig
+import org.scalatest.matchers.should.Matchers.shouldBe
+import org.scalatestplus.mockito.MockitoSugar
+import play.api.Application
+import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
 
-class AppConfigSpec extends AnyWordSpec with Matchers with MockitoSugar {
+class AppConfigSpec extends SpecBase with MockitoSugar {
 
-  "AppConfig" must {
+  "AppConfig" should {
 
-    "return the correct appName from configuration" in {
-      val mockServicesConfig: ServicesConfig = mock[ServicesConfig]
-      val mockConfiguration: Configuration   = mock[Configuration]
-      when(mockConfiguration.get[String]("appName")).thenReturn("trade-reporting-extracts")
-      when(mockConfiguration.get[String]("host")).thenReturn("localhost")
-      when(mockServicesConfig.baseUrl("trade-reporting-extracts")).thenReturn("http://localhost:2100")
-      when(mockConfiguration.get[String]("microservice.services.trade-reporting-extracts.context"))
-        .thenReturn("/trade-reporting-extracts")
-      val appConfig                          = new AppConfig(mockConfiguration, mockServicesConfig)
-      appConfig.tradeReportingExtractsApi shouldBe "http://localhost:2100/trade-reporting-extracts"
+    "return the correct appName" in new Setup {
+      appConfig.appName shouldBe "trade-reporting-extracts-stub"
     }
+    "return the correct eisAuthToken" in new Setup {
+      appConfig.eisAuthToken shouldBe "EisAuthToken"
+    }
+    "return the correct treXClientId" in new Setup {
+      appConfig.treXClientId shouldBe "TRE-CLIENT-ID"
+    }
+    "return the correct treInformationType" in new Setup {
+      appConfig.treInformationType shouldBe "TRE"
+    }
+
+  }
+
+  trait Setup {
+    val app: Application     = application.build()
+    val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
   }
 }

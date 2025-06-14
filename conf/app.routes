@@ -1,8 +1,8 @@
 # microservice specific routes
 
-GET           /eori/company-information          uk.gov.hmrc.tradereportingextractsstub.controllers.CompanyInformationController.companyInformation()
-GET           /eori/verified-email               uk.gov.hmrc.tradereportingextractsstub.controllers.NotificationEmailController.notificationEmail()
-GET           /eori/eori-history                 uk.gov.hmrc.tradereportingextractsstub.controllers.EoriHistoryController.eoriHistory()
+POST           /eori/company-information          uk.gov.hmrc.tradereportingextractsstub.controllers.CompanyInformationController.companyInformation()
+POST           /eori/verified-email               uk.gov.hmrc.tradereportingextractsstub.controllers.NotificationEmailController.notificationEmail()
+POST           /eori/eori-history                 uk.gov.hmrc.tradereportingextractsstub.controllers.EoriHistoryController.eoriHistory()
 
 
 

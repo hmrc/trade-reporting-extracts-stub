@@ -19,6 +19,4 @@ package uk.gov.hmrc.tradereportingextractsstub.models.sdes
 object FilesAvailableHeaders extends Enumeration {
   val XClientId: Value = Value("x-client-id")
   val XSdesKey: Value  = Value("x-sdes-key")
-
-  def allHeaders: List[String] = values.map(_.toString).toList
 }

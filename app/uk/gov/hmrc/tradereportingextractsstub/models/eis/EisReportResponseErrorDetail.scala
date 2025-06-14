@@ -28,6 +28,6 @@ case class EisReportResponseErrorDetail(
 )
 
 object EisReportResponseErrorDetail {
-  implicit lazy val eisReportResponseErrorDetailJsonFormat: Format[EisReportResponseErrorDetail] =
+  implicit val eisReportResponseErrorDetailJsonFormat: Format[EisReportResponseErrorDetail] =
     Json.format[EisReportResponseErrorDetail]
 }
