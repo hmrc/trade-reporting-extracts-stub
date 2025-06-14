@@ -18,31 +18,25 @@ package uk.gov.hmrc.tradereportingextractsstub.controllers
 
 import play.api.libs.json.*
 import play.api.mvc.*
-import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.tradereportingextractsstub.config.AppConfig
 import uk.gov.hmrc.tradereportingextractsstub.models.AllowedEoris
-import uk.gov.hmrc.tradereportingextractsstub.models.sdes.{FileAvailableStubRequest, FilesAvailableHeaders}
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders.*
+import uk.gov.hmrc.tradereportingextractsstub.models.sdes.{FileAvailableStubRequest, FilesAvailableHeaders}
 import uk.gov.hmrc.tradereportingextractsstub.utils.StubResource
-import uk.gov.hmrc.tradereportingextractsstub.utils.ApplicationConstants.*
-import scala.io.Source
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
+import scala.io.Source
 
 @Singleton
 class FilesAvailableController @Inject() (
   cc: ControllerComponents,
   appConfig: AppConfig
-)(using ec: ExecutionContext)
-    extends AbstractController(cc)
+) extends AbstractController(cc)
     with AllowedEoris
     with StubResource {
 
   def filesAvailable(informationType: String): Action[AnyContent] = Action.async { request =>
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequest(request)
-
     val xClientId: String = request.headers.get(XClientId.toString).getOrElse("")
     val eori: String      = request.headers.get(XSdesKey.toString).getOrElse("")
 

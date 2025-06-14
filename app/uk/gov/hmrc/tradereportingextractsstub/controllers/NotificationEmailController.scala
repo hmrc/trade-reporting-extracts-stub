@@ -23,14 +23,13 @@ import uk.gov.hmrc.tradereportingextractsstub.models.EoriRequest
 import uk.gov.hmrc.tradereportingextractsstub.services.NotificationEmailService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @Singleton()
 class NotificationEmailController @Inject() (
   notificationEmailService: NotificationEmailService,
   cc: ControllerComponents
-)(implicit ec: ExecutionContext)
-    extends BackendController(cc):
+) extends BackendController(cc):
 
   def notificationEmail(): Action[EoriRequest] = Action.async(parse.json[EoriRequest]) { implicit request =>
     val eori        = request.body.eori

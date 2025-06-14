@@ -23,12 +23,11 @@ import uk.gov.hmrc.tradereportingextractsstub.models.EoriRequest
 import uk.gov.hmrc.tradereportingextractsstub.services.EoriHistoryService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @Singleton()
-class EoriHistoryController @Inject() (eoriHistoryService: EoriHistoryService, cc: ControllerComponents)(implicit
-  ec: ExecutionContext
-) extends BackendController(cc):
+class EoriHistoryController @Inject() (eoriHistoryService: EoriHistoryService, cc: ControllerComponents)
+    extends BackendController(cc):
 
   def eoriHistory(): Action[EoriRequest] = Action.async(parse.json[EoriRequest]) { implicit request =>
     val eori        = request.body.eori

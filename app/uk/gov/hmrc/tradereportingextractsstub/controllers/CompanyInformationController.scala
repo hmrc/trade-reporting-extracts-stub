@@ -23,14 +23,13 @@ import uk.gov.hmrc.tradereportingextractsstub.models.EoriRequest
 import uk.gov.hmrc.tradereportingextractsstub.services.CompanyInformationService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.Future
 
 @Singleton()
 class CompanyInformationController @Inject() (
   companyInformationService: CompanyInformationService,
   cc: ControllerComponents
-)(implicit ec: ExecutionContext)
-    extends BackendController(cc):
+) extends BackendController(cc):
 
   def companyInformation(): Action[EoriRequest] = Action.async(parse.json[EoriRequest]) { implicit request =>
     val eori        = request.body.eori

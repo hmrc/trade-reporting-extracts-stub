@@ -17,12 +17,11 @@
 package uk.gov.hmrc.tradereportingextractsstub.config
 
 import play.api.Configuration
-import uk.gov.hmrc.play.bootstrap.config.ServicesConfig
 
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig):
+class AppConfig @Inject() (configuration: Configuration):
   val appName: String                 = configuration.get[String]("appName")
   lazy val eisAuthToken: String       = configuration.get[String]("eis.auth.token")
   lazy val treXClientId: String       = configuration.get[String]("sdes.x-client-id")
