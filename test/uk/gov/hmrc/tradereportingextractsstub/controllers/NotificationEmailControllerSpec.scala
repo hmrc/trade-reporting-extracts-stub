@@ -34,7 +34,11 @@ class NotificationEmailControllerSpec extends SpecBase {
       val request     = FakeRequest(POST, routes.NotificationEmailController.notificationEmail().url)
         .withBody(Json.toJson(eoriRequest))
       val result      = route(app, request).value
-      status(result) shouldBe OK
+      status(result)        shouldBe OK
+      contentAsJson(result) shouldBe Json.obj(
+        "address"   -> "example@test.com",
+        "timestamp" -> "2025-01-01T12:00:00"
+      )
     }
   }
 

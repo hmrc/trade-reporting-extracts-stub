@@ -20,7 +20,7 @@ import org.scalatest.matchers.should.Matchers.{should, shouldBe}
 import play.api.Application
 import play.api.http.Status.OK
 import play.api.libs.json.Json
-import play.api.test.Helpers.{POST, route, status}
+import play.api.test.Helpers.{POST, contentAsJson, route, status}
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.tradereportingextractsstub.models.EoriRequest
 import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
@@ -34,7 +34,17 @@ class CompanyInformationControllerSpec extends SpecBase {
       val request     = FakeRequest(POST, routes.CompanyInformationController.companyInformation().url)
         .withBody(Json.toJson(eoriRequest))
       val result      = route(app, request).value
-      status(result) shouldBe OK
+      status(result)        shouldBe OK
+      contentAsJson(result) shouldBe Json.obj(
+        "name"    -> "ABC Company",
+        "consent" -> "1",
+        "address" -> Json.obj(
+          "streetAndNumber" -> "XYZ Street",
+          "city"            -> "ABC City",
+          "postalCode"      -> Some("G11 2ZZ"),
+          "countryCode"     -> "GB"
+        )
+      )
     }
   }
 

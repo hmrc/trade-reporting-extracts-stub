@@ -34,7 +34,16 @@ class EoriHistoryControllerSpec extends SpecBase {
       val request     = FakeRequest(POST, routes.EoriHistoryController.eoriHistory().url)
         .withBody(Json.toJson(eoriRequest))
       val result      = route(app, request).value
-      status(result) shouldBe OK
+      status(result)        shouldBe OK
+      contentAsJson(result) shouldBe Json.obj(
+        "eoriHistory" -> Json.arr(
+          Json.obj(
+            "eori"       -> "GB123456789012",
+            "validFrom"  -> "2001-01-20",
+            "validUntil" -> "2002-01-20"
+          )
+        )
+      )
     }
   }
 
