@@ -22,8 +22,10 @@ import play.api.Application
 import play.api.libs.json.Json
 import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.tradereportingextractsstub.models.EoriRequest
+import uk.gov.hmrc.tradereportingextractsstub.models.{EoriRequest, NotificationEmail}
 import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
+
+import java.time.LocalDateTime
 
 class NotificationEmailControllerSpec extends SpecBase {
 
@@ -34,11 +36,11 @@ class NotificationEmailControllerSpec extends SpecBase {
       val request     = FakeRequest(POST, routes.NotificationEmailController.notificationEmail().url)
         .withBody(Json.toJson(eoriRequest))
       val result      = route(app, request).value
-      status(result)        shouldBe OK
-      contentAsJson(result) shouldBe Json.obj(
-        "address"   -> "example@test.com",
-        "timestamp" -> "2025-01-01T12:00:00"
-      )
+      status(result) shouldBe OK
+      val expectedEmail =
+        NotificationEmail(address = "example@test.com", timestamp = LocalDateTime.parse("2025-01-01T12:00:00"))
+      val actualEmail   = contentAsJson(result).as[NotificationEmail]
+      actualEmail shouldBe expectedEmail
     }
   }
 

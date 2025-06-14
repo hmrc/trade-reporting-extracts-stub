@@ -32,7 +32,7 @@ class NotificationEmailController @Inject() (
 ) extends BackendController(cc):
 
   def notificationEmail(): Action[EoriRequest] = Action.async(parse.json[EoriRequest]) { implicit request =>
-    val eori        = request.body.eori
-    val companyInfo = notificationEmailService.notificationEmail(eori)
-    Future.successful(Ok(Json.toJson(companyInfo)))
+    val eori              = request.body.eori
+    val notificationEmail = notificationEmailService.notificationEmail(eori)
+    Future.successful(Ok(Json.toJson(notificationEmail)))
   }

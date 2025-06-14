@@ -22,8 +22,10 @@ import play.api.Application
 import play.api.libs.json.Json
 import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.tradereportingextractsstub.models.EoriRequest
+import uk.gov.hmrc.tradereportingextractsstub.models.{EoriHistory, EoriHistoryResponse, EoriRequest}
 import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
+
+import java.time.{Instant, LocalDate, LocalDateTime}
 
 class EoriHistoryControllerSpec extends SpecBase {
 
@@ -34,16 +36,18 @@ class EoriHistoryControllerSpec extends SpecBase {
       val request     = FakeRequest(POST, routes.EoriHistoryController.eoriHistory().url)
         .withBody(Json.toJson(eoriRequest))
       val result      = route(app, request).value
-      status(result)        shouldBe OK
-      contentAsJson(result) shouldBe Json.obj(
-        "eoriHistory" -> Json.arr(
-          Json.obj(
-            "eori"       -> "GB123456789012",
-            "validFrom"  -> "2001-01-20",
-            "validUntil" -> "2002-01-20"
+      status(result) shouldBe OK
+      val expectedEoriHistory = EoriHistoryResponse(
+        eoriHistory = Seq(
+          EoriHistory(
+            eori = "GB123456789012",
+            validFrom = Some(Instant.parse("2001-01-20T12:00:00Z")),
+            validUntil = Some(Instant.parse("2002-01-20T12:00:00Z"))
           )
         )
       )
+      val actualEoriHistory   = contentAsJson(result).as[EoriHistoryResponse]
+      actualEoriHistory shouldBe expectedEoriHistory
     }
   }
 
