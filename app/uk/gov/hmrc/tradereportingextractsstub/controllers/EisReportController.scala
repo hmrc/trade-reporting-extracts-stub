@@ -16,7 +16,8 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.controllers
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json
+import play.api.libs.json.{JsError, JsSuccess, JsValue, Json, JsonValidationError}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Request}
 import sttp.model.MediaType.ApplicationJson
 import uk.gov.hmrc.http.HeaderCarrier
@@ -59,17 +60,26 @@ class EisReportController @Inject() (
         )
       )
     } else
-      eisReportService.isJsonValid(request.body, hc).map {
-        case Left(errorMessage: String) =>
-          BadRequest(buildBadRequestBodyResponse(request, List(errorMessage))).withHeaders(
-            ContentType.toString    -> ApplicationJson.toString(),
-            Date.toString           -> getCurrentHttpDate,
-            XCorrelationID.toString -> request.headers.get(XCorrelationID.toString).getOrElse("")
+      request.body.validate[EisReportRequest] match {
+        case JsError(errors) =>
+          val errorMessage = errors
+            .map { case (path, validationErrors) =>
+              s"Invalid value at path $path: ${validationErrors.map(_.message).mkString(", ")}"
+            }
+            .mkString(", ")
+          Future(
+            BadRequest(buildBadRequestBodyResponse(request, List(errorMessage))).withHeaders(
+              ContentType.toString    -> ApplicationJson.toString(),
+              Date.toString           -> getCurrentHttpDate,
+              XCorrelationID.toString -> request.headers.get(XCorrelationID.toString).getOrElse("")
+            )
           )
-        case Right(_)                   =>
-          NoContent.withHeaders(
-            Date.toString           -> getCurrentHttpDate,
-            XCorrelationID.toString -> request.headers.get(XCorrelationID.toString).getOrElse("")
+        case JsSuccess(_, _) =>
+          Future(
+            NoContent.withHeaders(
+              Date.toString           -> getCurrentHttpDate,
+              XCorrelationID.toString -> request.headers.get(XCorrelationID.toString).getOrElse("")
+            )
           )
       }
   }
