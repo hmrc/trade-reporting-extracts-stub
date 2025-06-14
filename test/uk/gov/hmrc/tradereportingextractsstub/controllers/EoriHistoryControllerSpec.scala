@@ -25,7 +25,7 @@ import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.tradereportingextractsstub.models.{EoriHistory, EoriHistoryResponse, EoriRequest}
 import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
 
-import java.time.{Instant, LocalDate, LocalDateTime}
+import java.time.Instant
 
 class EoriHistoryControllerSpec extends SpecBase {
 
