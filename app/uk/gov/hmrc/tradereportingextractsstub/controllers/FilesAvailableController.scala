@@ -22,7 +22,6 @@ import uk.gov.hmrc.tradereportingextractsstub.config.AppConfig
 import uk.gov.hmrc.tradereportingextractsstub.models.AllowedEoris
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders.*
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.{FileAvailableStubRequest, FilesAvailableHeaders}
-import uk.gov.hmrc.tradereportingextractsstub.utils.StubResource
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
@@ -33,8 +32,7 @@ class FilesAvailableController @Inject() (
   cc: ControllerComponents,
   appConfig: AppConfig
 ) extends AbstractController(cc)
-    with AllowedEoris
-    with StubResource {
+    with AllowedEoris {
 
   def filesAvailable(informationType: String): Action[AnyContent] = Action.async { request =>
     val xClientId: String = request.headers.get(XClientId.toString).getOrElse("")
