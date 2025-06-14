@@ -14,27 +14,20 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.tradereportingextractsstub.controllers
+package uk.gov.hmrc.tradereportingextractsstub.config
 
-import org.scalatest.matchers.should.Matchers.{should, shouldBe}
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.matchers.should.Matchers.should
 import play.api.Application
-import play.api.http.Status.OK
-import play.api.libs.json.Json
-import play.api.test.Helpers.{POST, route, status}
-import play.api.test.{FakeRequest, Helpers}
-import uk.gov.hmrc.tradereportingextractsstub.models.EoriRequest
 import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
 
-class CompanyInformationControllerSpec extends SpecBase {
+class ModuleSpec extends SpecBase {
 
-  "GET /company-information" should {
-    "return 200" in new Setup {
+  "Module" should {
 
-      val eoriRequest = EoriRequest(eori = "GB123456789012")
-      val request     = FakeRequest(POST, routes.CompanyInformationController.companyInformation().url)
-        .withBody(Json.toJson(eoriRequest))
-      val result      = route(app, request).value
-      status(result) shouldBe OK
+    "bind AppConfig as an eager singleton" in new Setup {
+      val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+      appConfig should not be null
     }
   }
 

@@ -23,12 +23,7 @@ import javax.inject.{Inject, Singleton}
 
 @Singleton
 class AppConfig @Inject() (configuration: Configuration, servicesConfig: ServicesConfig):
-  val appName: String                        = configuration.get[String]("appName")
-  val host: String                           = configuration.get[String]("host")
-  val statusNotificationDelay: Int           = configuration.get[Int]("notificationDelay")
-  lazy val tradeReportingExtractsApi: String = servicesConfig.baseUrl("trade-reporting-extracts") +
-    configuration.get[String]("microservice.services.trade-reporting-extracts.context")
-  lazy val eisAuthToken: String              = configuration.get[String]("eis.auth.token")
-
+  val appName: String                 = configuration.get[String]("appName")
+  lazy val eisAuthToken: String       = configuration.get[String]("eis.auth.token")
   lazy val treXClientId: String       = configuration.get[String]("sdes.x-client-id")
   lazy val treInformationType: String = configuration.get[String]("sdes.information-type")

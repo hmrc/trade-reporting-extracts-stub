@@ -25,7 +25,6 @@ import scala.concurrent.Future
 
 @Singleton
 class EisReportService @Inject() (
-  statusUpdateService: StatusNotificationService,
   schemaValidator: SchemaValidator
 ) extends Logging {
   private val schemaPath                                                             = "/schemas/API1Request.json"
@@ -35,10 +34,7 @@ class EisReportService @Inject() (
       .validateJson(schema, json)
       .fold(
         error => Future.successful(Left(error)),
-        _ => {
-          statusUpdateService.scheduleStatusUpdate(hc)
-          Future.successful(Right(true))
-        }
+        _ => Future.successful(Right(true))
       )
   }
 }

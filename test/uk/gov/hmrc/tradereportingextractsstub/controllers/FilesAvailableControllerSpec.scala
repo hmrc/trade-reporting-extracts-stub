@@ -20,13 +20,10 @@ import org.scalatest.matchers.should.Matchers.{should, shouldBe}
 import play.api.Application
 import play.api.http.Status
 import play.api.libs.json.Json
-import play.api.test.Helpers.{GET, route, running, status, writeableOf_AnyContentAsEmpty}
+import play.api.test.Helpers.{GET, route, running, status, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsJson}
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FileAvailableStubRequest
 import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
-import play.api.test.FakeRequest
-import play.api.test.Helpers.POST
-import play.api.test.Helpers.writeableOf_AnyContentAsJson
 
 class FilesAvailableControllerSpec extends SpecBase {
 

@@ -16,31 +16,20 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.services
 
-import play.api.i18n.Lang.logger
 import play.api.libs.json.Json
-import play.api.mvc.Result
-import play.api.mvc.Results.{Forbidden, Ok}
-import uk.gov.hmrc.tradereportingextractsstub.models.{AllowedEoris, EoriHistory, EoriHistoryResponse}
+import uk.gov.hmrc.tradereportingextractsstub.models.{EoriHistory, EoriHistoryResponse}
 
 import java.nio.file.{Files, Paths}
-import javax.inject.Inject
 import scala.util.{Failure, Success, Try}
 
-class EoriHistoryService @Inject() () extends AllowedEoris {
+class EoriHistoryService {
 
   private val reportsPath: String = "conf/response/EoriHistoricalData.json"
 
-  def eoriHistory(eori: String): Result =
-    if (!allowedEoris.contains(eori)) {
-      Forbidden("EORI not allowed")
-    } else {
-      loadReportsFromFile(reportsPath) match {
-        case Success(reports) => Ok(Json.toJson(EoriHistoryResponse(reports)))
-        case Failure(ex)      =>
-          val errMsg = s"Failed to load reports from file: ${ex.getMessage}"
-          logger.error(errMsg)
-          Forbidden(errMsg)
-      }
+  def eoriHistory(eori: String): EoriHistoryResponse =
+    loadReportsFromFile(reportsPath) match {
+      case Success(reports) => EoriHistoryResponse(reports)
+      case Failure(ex)      => EoriHistoryResponse(Seq.empty[EoriHistory])
     }
 
   private def loadReportsFromFile(path: String): Try[Seq[EoriHistory]] =

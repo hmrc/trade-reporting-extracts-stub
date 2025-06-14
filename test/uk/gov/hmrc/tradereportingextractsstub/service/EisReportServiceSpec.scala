@@ -24,7 +24,7 @@ import org.scalatest.wordspec.AsyncWordSpec
 import org.scalatestplus.mockito.MockitoSugar
 import play.api.libs.json.Json
 import uk.gov.hmrc.http.HeaderCarrier
-import uk.gov.hmrc.tradereportingextractsstub.services.{EisReportService, StatusNotificationService}
+import uk.gov.hmrc.tradereportingextractsstub.services.EisReportService
 import uk.gov.hmrc.tradereportingextractsstub.utils.SchemaValidator
 
 import scala.compiletime.ops.any
@@ -35,9 +35,8 @@ class EisReportServiceSpec extends AsyncWordSpec with Matchers with MockitoSugar
   "EpidReportService" must {
 
     "return Right(true) and schedule a status update when JSON is valid" in {
-      val mockStatusUpdateService = mock[StatusNotificationService]
-      val mockSchemaValidator     = mock[SchemaValidator]
-      val service                 = new EisReportService(mockStatusUpdateService, mockSchemaValidator)
+      val mockSchemaValidator = mock[SchemaValidator]
+      val service             = new EisReportService(mockSchemaValidator)
 
       val validJson  = Json.parse("""{ "key": "value" }""")
       val mockSchema = mock[Schema]
@@ -53,9 +52,8 @@ class EisReportServiceSpec extends AsyncWordSpec with Matchers with MockitoSugar
     }
 
     "return Left(error) when JSON is invalid" in {
-      val mockStatusUpdateService = mock[StatusNotificationService]
-      val mockSchemaValidator     = mock[SchemaValidator]
-      val service                 = new EisReportService(mockStatusUpdateService, mockSchemaValidator)
+      val mockSchemaValidator = mock[SchemaValidator]
+      val service             = new EisReportService(mockSchemaValidator)
 
       val invalidJson = Json.parse("""{ "invalid": "data" }""")
       val mockSchema  = mock[Schema]
