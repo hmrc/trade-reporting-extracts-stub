@@ -16,16 +16,14 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.controllers
 
-import play.api.libs.json.{JsValue, Json}
+import play.api.libs.json
+import play.api.libs.json.{JsError, JsSuccess, JsValue, Json}
 import play.api.mvc.{Action, AnyContent, ControllerComponents, Request}
 import sttp.model.MediaType.ApplicationJson
-import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
-import uk.gov.hmrc.play.http.HeaderCarrierConverter
 import uk.gov.hmrc.tradereportingextractsstub.config.AppConfig
 import uk.gov.hmrc.tradereportingextractsstub.models.eis.*
 import uk.gov.hmrc.tradereportingextractsstub.models.eis.EisReportRequestHeaders.*
-import uk.gov.hmrc.tradereportingextractsstub.services.EisReportService
 import uk.gov.hmrc.tradereportingextractsstub.utils.HttpDateFormatter.getCurrentHttpDate
 
 import javax.inject.{Inject, Singleton}
@@ -33,15 +31,13 @@ import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
 class EisReportController @Inject() (
-  eisReportService: EisReportService,
   cc: ControllerComponents,
   appConfig: AppConfig
 )(using ec: ExecutionContext)
     extends BackendController(cc) {
 
   def requestTraderReport(): Action[JsValue] = Action.async(parse.json) { request =>
-    implicit val hc: HeaderCarrier = HeaderCarrierConverter.fromRequest(request)
-    val missingHeaders             =
+    val missingHeaders =
       EisReportRequestHeaders.allHeaders.filterNot(header => request.headers.get(header).isDefined)
     if missingHeaders.nonEmpty then {
       Future.successful(
@@ -59,17 +55,26 @@ class EisReportController @Inject() (
         )
       )
     } else
-      eisReportService.isJsonValid(request.body, hc).map {
-        case Left(errorMessage: String) =>
-          BadRequest(buildBadRequestBodyResponse(request, List(errorMessage))).withHeaders(
-            ContentType.toString    -> ApplicationJson.toString(),
-            Date.toString           -> getCurrentHttpDate,
-            XCorrelationID.toString -> request.headers.get(XCorrelationID.toString).getOrElse("")
+      request.body.validate[EisReportRequest] match {
+        case JsError(errors) =>
+          val errorMessage = errors
+            .map { case (path, validationErrors) =>
+              s"Invalid value at path $path: ${validationErrors.map(_.message).mkString(", ")}"
+            }
+            .mkString(", ")
+          Future(
+            BadRequest(buildBadRequestBodyResponse(request, List(errorMessage))).withHeaders(
+              ContentType.toString    -> ApplicationJson.toString(),
+              Date.toString           -> getCurrentHttpDate,
+              XCorrelationID.toString -> request.headers.get(XCorrelationID.toString).getOrElse("")
+            )
           )
-        case Right(_)                   =>
-          NoContent.withHeaders(
-            Date.toString           -> getCurrentHttpDate,
-            XCorrelationID.toString -> request.headers.get(XCorrelationID.toString).getOrElse("")
+        case JsSuccess(_, _) =>
+          Future(
+            NoContent.withHeaders(
+              Date.toString           -> getCurrentHttpDate,
+              XCorrelationID.toString -> request.headers.get(XCorrelationID.toString).getOrElse("")
+            )
           )
       }
   }

@@ -16,7 +16,6 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.models.sdes
 
-import play.api.libs.functional.syntax._
 import play.api.libs.json.*
 
 case class FileAvailableStubRequest(
@@ -27,8 +26,3 @@ case class FileAvailableStubRequest(
 object FileAvailableStubRequest {
   implicit lazy val requestJsonFormat: Format[FileAvailableStubRequest] = Json.format[FileAvailableStubRequest]
 }
-
-implicit val reads: Reads[FileAvailableStubRequest] = (
-  (JsPath \ "reportRequestId").read[String] and
-    (JsPath \ "fileParts").read[Int]
-)(FileAvailableStubRequest.apply _)

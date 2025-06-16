@@ -14,7 +14,24 @@
  * limitations under the License.
  */
 
-package uk.gov.hmrc.tradereportingextractsstub.models
+package uk.gov.hmrc.tradereportingextractsstub.config
 
-class MissingRequiredParameterException(paramName: String, paramType: String)
-    extends Exception(s"Missing required $paramType parameter `$paramName`.")
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.matchers.should.Matchers.should
+import play.api.Application
+import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
+
+class ModuleSpec extends SpecBase {
+
+  "Module" should {
+
+    "bind AppConfig as an eager singleton" in new Setup {
+      val appConfig: AppConfig = app.injector.instanceOf[AppConfig]
+      appConfig should not be null
+    }
+  }
+
+  trait Setup {
+    val app: Application = application.build()
+  }
+}

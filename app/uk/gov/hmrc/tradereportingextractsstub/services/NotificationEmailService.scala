@@ -16,19 +16,14 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.services
 
-import play.api.libs.json.Json
-import play.api.mvc.Result
-import play.api.mvc.Results.{Forbidden, Ok}
 import uk.gov.hmrc.tradereportingextractsstub.models.{AllowedEoris, NotificationEmail}
 
 import java.time.LocalDateTime
 
 class NotificationEmailService extends AllowedEoris:
 
-  def notificationEmail(eori: String): Result =
-    if !allowedEoris.contains(eori) then return Forbidden("EORI not allowed")
-    val res = NotificationEmail(
+  def notificationEmail(eori: String): NotificationEmail =
+    NotificationEmail(
       "example@test.com",
-      LocalDateTime.now()
+      LocalDateTime.parse("2025-01-01T12:00:00")
     )
-    Ok(Json.toJson(res))

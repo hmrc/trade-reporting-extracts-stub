@@ -18,31 +18,33 @@ package uk.gov.hmrc.tradereportingextractsstub.controllers
 
 import org.scalatest.matchers.should.Matchers
 import org.scalatest.matchers.should.Matchers.{should, shouldBe}
+import play.api.Application
 import play.api.libs.json.Json
 import play.api.test.Helpers.*
-import play.api.test.{FakeHeaders, FakeRequest, Helpers}
-import uk.gov.hmrc.tradereportingextractsstub.services.NotificationEmailService
+import play.api.test.{FakeRequest, Helpers}
+import uk.gov.hmrc.tradereportingextractsstub.models.{EoriRequest, NotificationEmail}
 import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import java.time.LocalDateTime
 
 class NotificationEmailControllerSpec extends SpecBase {
 
-  private val notificationEmailService = new NotificationEmailService
-  private val controller               =
-    new NotificationEmailController(notificationEmailService, Helpers.stubControllerComponents())(implicitly)
-
   "GET /verified-email" should {
-    "return 200" in {
-      val fakeRequest =
-        FakeRequest(
-          "GET",
-          s"/verified-email",
-          FakeHeaders(Seq(CONTENT_TYPE -> JSON)),
-          Json.obj("eori" -> "GB123456789012")
-        )
-      val result      = controller.notificationEmail()(fakeRequest)
-      result should not be null
+    "return 200" in new Setup {
+
+      val eoriRequest = EoriRequest(eori = "GB123456789012")
+      val request     = FakeRequest(POST, routes.NotificationEmailController.notificationEmail().url)
+        .withBody(Json.toJson(eoriRequest))
+      val result      = route(app, request).value
+      status(result) shouldBe OK
+      val expectedEmail =
+        NotificationEmail(address = "example@test.com", timestamp = LocalDateTime.parse("2025-01-01T12:00:00"))
+      val actualEmail   = contentAsJson(result).as[NotificationEmail]
+      actualEmail shouldBe expectedEmail
     }
+  }
+
+  trait Setup {
+    val app: Application = application.build()
   }
 }
