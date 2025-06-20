@@ -31,7 +31,7 @@ class EisReportControllerSpec extends SpecBase {
       val request = FakeRequest(PUT, routes.EisReportController.requestTraderReport().url)
         .withHeaders(
           "accept"           -> "application/json",
-          "authorization"    -> "EisAuthToken",
+          "authorization"    -> "Bearer EisAuthToken",
           "content-type"     -> "application/json",
           "date"             -> "Mon, 02 Oct 2023 14:30:00 GMT",
           "x-correlation-id" -> "46cd6ed6-21ba-4e05-975e-56d02011243c",
@@ -56,7 +56,7 @@ class EisReportControllerSpec extends SpecBase {
       val request = FakeRequest(PUT, routes.EisReportController.requestTraderReport().url)
         .withHeaders(
           "accept"           -> "application/json",
-          "authorization"    -> "EisAuthToken",
+          "authorization"    -> "Bearer EisAuthToken",
           "content-type"     -> "application/json",
           "date"             -> "Mon, 02 Oct 2023 14:30:00 GMT",
           "x-correlation-id" -> "46cd6ed6-21ba-4e05-975e-56d02011243c"
@@ -81,7 +81,7 @@ class EisReportControllerSpec extends SpecBase {
       val request = FakeRequest(PUT, routes.EisReportController.requestTraderReport().url)
         .withHeaders(
           "accept"           -> "application/json",
-          "authorization"    -> "EisAuthToken",
+          "authorization"    -> "Bearer EisAuthToken",
           "content-type"     -> "application/json",
           "date"             -> "Mon, 02 Oct 2023 14:30:00 GMT",
           "x-correlation-id" -> "46cd6ed6-21ba-4e05-975e-56d02011243c",
@@ -94,7 +94,7 @@ class EisReportControllerSpec extends SpecBase {
       val request = FakeRequest(PUT, routes.EisReportController.requestTraderReport().url)
         .withHeaders(
           "accept"           -> "application/json",
-          "authorization"    -> "EisAuthToken",
+          "authorization"    -> "Bearer EisAuthToken",
           "content-type"     -> "application/json",
           "date"             -> "Mon, 02 Oct 2023 14:30:00 GMT",
           "x-correlation-id" -> "46cd6ed6-21ba-4e05-975e-56d02011243c",

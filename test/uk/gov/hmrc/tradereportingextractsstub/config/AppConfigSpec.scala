@@ -30,7 +30,7 @@ class AppConfigSpec extends SpecBase with MockitoSugar {
       appConfig.appName shouldBe "trade-reporting-extracts-stub"
     }
     "return the correct eisAuthToken" in new Setup {
-      appConfig.eisAuthToken shouldBe "EisAuthToken"
+      appConfig.eisAuthToken shouldBe "Bearer EisAuthToken"
     }
     "return the correct treXClientId" in new Setup {
       appConfig.treXClientId shouldBe "TRE-CLIENT-ID"
