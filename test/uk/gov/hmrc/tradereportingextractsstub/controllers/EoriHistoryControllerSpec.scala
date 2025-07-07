@@ -25,7 +25,7 @@ import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.tradereportingextractsstub.models.{EoriHistory, EoriHistoryResponse, EoriRequest}
 import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
 
-import java.time.Instant
+import java.time.LocalDate
 
 class EoriHistoryControllerSpec extends SpecBase {
 
@@ -41,8 +41,8 @@ class EoriHistoryControllerSpec extends SpecBase {
         eoriHistory = Seq(
           EoriHistory(
             eori = "GB123456789012",
-            validFrom = Some(Instant.parse("2001-01-20T12:00:00Z")),
-            validUntil = Some(Instant.parse("2002-01-20T12:00:00Z"))
+            validFrom = Some(LocalDate.parse("2001-01-20")),
+            validUntil = Some(LocalDate.parse("2002-01-20"))
           )
         )
       )

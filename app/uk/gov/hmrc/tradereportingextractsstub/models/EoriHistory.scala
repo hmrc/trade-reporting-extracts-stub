@@ -18,9 +18,9 @@ package uk.gov.hmrc.tradereportingextractsstub.models
 
 import play.api.libs.json.*
 
-import java.time.Instant
+import java.time.LocalDate
 
-case class EoriHistory(eori: String, validFrom: Option[Instant], validUntil: Option[Instant])
+case class EoriHistory(eori: String, validFrom: Option[LocalDate], validUntil: Option[LocalDate])
 
 object EoriHistory {
   implicit val format: OFormat[EoriHistory] = Json.format[EoriHistory]
