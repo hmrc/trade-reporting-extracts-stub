@@ -15,7 +15,6 @@ lazy val microservice = Project("trade-reporting-extracts-stub", file("."))
     scalacOptions += "-Wconf:msg=Flag.*repeatedly:s",
     PlayKeys.playDefaultPort := 2101
   )
-  .settings(resolvers += Resolver.jcenterRepo)
   .settings(CodeCoverageSettings.settings *)
 
 lazy val it = project
