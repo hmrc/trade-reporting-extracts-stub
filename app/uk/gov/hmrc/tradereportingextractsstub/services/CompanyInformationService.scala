@@ -20,7 +20,7 @@ import uk.gov.hmrc.tradereportingextractsstub.models.{AddressInformation, Compan
 
 class CompanyInformationService:
 
-  def companyInformation(eori: String): CompanyInformation =
+  def companyInformation(eori: String, consent: Boolean): CompanyInformation =
     CompanyInformation(
       eori match {
         case eori if eori.startsWith("GB11") => s"GB Trader Ltd - $eori"
@@ -31,7 +31,7 @@ class CompanyInformationService:
         case eori if eori.startsWith("XI")   => s"XI Ltd - $eori"
         case _                               => ""
       },
-      "1",
+      if (consent) "1" else "0",
       AddressInformation(
         "XYZ Street",
         "ABC City",

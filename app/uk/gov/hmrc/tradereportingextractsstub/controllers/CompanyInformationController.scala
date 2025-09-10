@@ -33,6 +33,8 @@ class CompanyInformationController @Inject() (
 
   def companyInformation(): Action[EoriRequest] = Action.async(parse.json[EoriRequest]) { implicit request =>
     val eori        = request.body.eori
-    val companyInfo = companyInformationService.companyInformation(eori)
+    val companyInfo =
+      if (eori == "GB999999999999") companyInformationService.companyInformation(eori, consent = false)
+      else companyInformationService.companyInformation(eori, consent = true)
     Future.successful(Ok(Json.toJson(companyInfo)))
   }
