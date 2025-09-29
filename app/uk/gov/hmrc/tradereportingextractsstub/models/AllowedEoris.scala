@@ -18,6 +18,7 @@ package uk.gov.hmrc.tradereportingextractsstub.models
 
 trait AllowedEoris {
   val allowedEoris: Seq[String] = Seq(
+    "GB333333333331",
     "GB123456789012",
     "GB123456789013",
     "GB123456789014",

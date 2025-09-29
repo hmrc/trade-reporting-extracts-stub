@@ -3,7 +3,7 @@
 "downloadURL": "https://raw.githubusercontent.com/hmrc/trade-reporting-extracts/refs/heads/main/resources/payload/example%20payload.txt",
 "fileSize": 1234,
 "metadata": [
-  { "metadata": "RETENTION_DAYS", "value": "30" },
+  { "metadata": "FileCreationTimestamp", "value": "30" },
   { "metadata": "FileType", "value": "CSV" },
   { "metadata": "EORI", "value": "{{EORI_VALUE}}" },
   { "metadata": "MdtpReportXCorrelationId", "value": "2409398b-ee8f-47cd-b873-ac7ac099c28b" },
@@ -13,4 +13,4 @@
   { "metadata": "ReportLastFile", "value": "false" }
 ]
 }
-   
+
