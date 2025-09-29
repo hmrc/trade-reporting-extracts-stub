@@ -36,7 +36,7 @@ class FilesAvailableControllerSpec extends SpecBase {
           fileParts = 2
         )
         val stubRequests = Seq(stubRequest)
-        val jsonBody     = Json.toJson(stubRequests)
+        val jsonBody     = Json.toJson(stubRequests)  
 
         val request = FakeRequest(GET, routes.FilesAvailableController.filesAvailable("TRE").url)
           .withHeaders("x-client-id" -> "TRE-CLIENT-ID", "x-sdes-key" -> "GB123456789012")

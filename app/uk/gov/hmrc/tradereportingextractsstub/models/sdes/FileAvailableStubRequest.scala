@@ -17,11 +17,14 @@
 package uk.gov.hmrc.tradereportingextractsstub.models.sdes
 
 import play.api.libs.json.*
+import uk.gov.hmrc.tradereportingextractsstub.models.ReportTypeName
 
 case class FileAvailableStubRequest(
-  reportRequestId: String,
-  fileParts: Int
-)
+                                     correlationId: String,
+                                     requesterEORI: Seq[String],
+                                     reportRequestId : String,
+                                     reportTypeName : ReportTypeName
+                                    )
 
 object FileAvailableStubRequest {
   implicit lazy val requestJsonFormat: Format[FileAvailableStubRequest] = Json.format[FileAvailableStubRequest]

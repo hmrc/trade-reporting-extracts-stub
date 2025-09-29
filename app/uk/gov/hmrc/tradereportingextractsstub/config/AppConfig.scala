@@ -21,8 +21,39 @@ import play.api.Configuration
 import javax.inject.{Inject, Singleton}
 
 @Singleton
-class AppConfig @Inject() (configuration: Configuration):
-  val appName: String                 = configuration.get[String]("appName")
-  lazy val eisAuthToken: String       = configuration.get[String]("eis.auth.token")
-  lazy val treXClientId: String       = configuration.get[String]("sdes.x-client-id")
+class AppConfig @Inject() (configuration: Configuration) {
+  protected lazy val rootServices = "microservice.services"
+
+  protected lazy val defaultProtocol: String =
+    configuration
+      .getOptional[String](s"$rootServices.protocol")
+      .getOrElse("http")
+
+  def baseUrl(serviceName: String): String = {
+    val protocol = getConfString(s"$serviceName.protocol", defaultProtocol)
+    val host = getConfString(s"$serviceName.host", throwConfigNotFoundError(s"$serviceName.host"))
+    val port = getConfInt(s"$serviceName.port", throwConfigNotFoundError(s"$serviceName.port"))
+    s"$protocol://$host:$port"
+  }
+
+  def getConfString(confKey: String, defString: => String): String =
+    configuration
+      .getOptional[String](s"$rootServices.$confKey")
+      .getOrElse(defString)
+
+  def getConfInt(confKey: String, defInt: => Int): Int =
+    configuration
+      .getOptional[Int](s"$rootServices.$confKey")
+      .getOrElse(defInt)
+
+  private def throwConfigNotFoundError(key: String) =
+    throw new RuntimeException(s"Could not find config key '$key'")
+
+
+  val appName: String = configuration.get[String]("appName")
+  lazy val eisAuthToken: String = configuration.get[String]("eis.auth.token")
+  lazy val treXClientId: String = configuration.get[String]("sdes.x-client-id")
   lazy val treInformationType: String = configuration.get[String]("sdes.information-type")
+  lazy val tradeReportingExtractsApi: String = baseUrl("trade-reporting-extracts") +
+    configuration.get[String]("microservice.services.trade-reporting-extracts.context")
+}

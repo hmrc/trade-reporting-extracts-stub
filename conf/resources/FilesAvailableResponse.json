@@ -1,16 +1,30 @@
 {
-"filename": "pvat-2018-06.csv",
-"downloadURL": "https://raw.githubusercontent.com/hmrc/trade-reporting-extracts/refs/heads/main/resources/payload/example%20payload.txt",
-"fileSize": 1234,
-"metadata": [
-  { "metadata": "RETENTION_DAYS", "value": "30" },
+  "filename": "RE51198408_EXPORTS-ITEM-REPORT_20250903_1.csv",
+  "downloadURL": "https://sdes-test.hmrc.gov.uk/api-download%2Fe2a79b07-2837-4168-8a9c-98482ac2fa74",
+  "fileSize": 2147483648,
+  "metadata": [
+    { "metadata": "FileType", "value": "CSV" },
+    { "metadata": "EORI", "value": "{{EORI_VALUE}}" },
+    { "metadata": "MdtpReportXCorrelationId", "value": "{{COR_ID}}" },
+    { "metadata": "MdtpReportRequestId", "value": "{{REP_ID}}" },
+    { "metadata": "MdtpReportTypeName", "value": "{{REP_TYP}}" },
+    { "metadata": "ReportFileCounter", "value": "1" },
+    { "metadata": "ReportLastFile", "value": "false" },
+    { "metadata": "FileCreationTimestamp", "value": "2025-07-28T11:23:03.126+00:00" }
+  ]
+},
+  {
+  "filename": "RE51198408_EXPORTS-ITEM-REPORT_20250903_2.csv",
+  "downloadURL": "https://sdes-test.hmrc.gov.uk/api-download%2Fe2a79b07-2837-4168-8a9c-98482ac2fa74",
+  "fileSize": 2147483648,
+  "metadata": [
   { "metadata": "FileType", "value": "CSV" },
   { "metadata": "EORI", "value": "{{EORI_VALUE}}" },
-  { "metadata": "MdtpReportXCorrelationId", "value": "2409398b-ee8f-47cd-b873-ac7ac099c28b" },
-  { "metadata": "MdtpReportRequestId", "value": "{{REPORT_ID}}" },
-  { "metadata": "MdtpReportTypeName", "value": "Imports-Header" },
-  { "metadata": "ReportFileCounter", "value": "{{PART_NUM}}of{{TOTAL_PARTS}}" },
-  { "metadata": "ReportLastFile", "value": "false" }
-]
+  { "metadata": "MdtpReportXCorrelationId", "value": "{{COR_ID}}" },
+  { "metadata": "MdtpReportRequestId", "value": "{{REP_ID}}" },
+  { "metadata": "MdtpReportTypeName", "value": "{{REP_TYP}}" },
+  { "metadata": "ReportFileCounter", "value": "2" },
+  { "metadata": "ReportLastFile", "value": "true" },
+  { "metadata": "FileCreationTimestamp", "value": "2025-07-28T11:23:03.126+00:00" }
+  ]
 }
-   

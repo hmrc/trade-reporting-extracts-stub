@@ -18,62 +18,57 @@ package uk.gov.hmrc.tradereportingextractsstub.controllers
 
 import play.api.libs.json.*
 import play.api.mvc.*
+import uk.gov.hmrc.http.HeaderCarrier
 import uk.gov.hmrc.tradereportingextractsstub.config.AppConfig
 import uk.gov.hmrc.tradereportingextractsstub.models.AllowedEoris
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders.*
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.{FileAvailableStubRequest, FilesAvailableHeaders}
+import uk.gov.hmrc.tradereportingextractsstub.services.FileAvailableService
 
 import javax.inject.{Inject, Singleton}
-import scala.concurrent.Future
+import scala.concurrent.{ExecutionContext, Future}
 import scala.io.Source
 
 @Singleton
 class FilesAvailableController @Inject() (
   cc: ControllerComponents,
+  fa: FileAvailableService,
   appConfig: AppConfig
-) extends AbstractController(cc)
+) (implicit ec: ExecutionContext) extends AbstractController(cc)
     with AllowedEoris {
 
   def filesAvailable(informationType: String): Action[AnyContent] = Action.async { request =>
     val xClientId: String = request.headers.get(XClientId.toString).getOrElse("")
-    val eori: String      = request.headers.get(XSdesKey.toString).getOrElse("")
-
-    eori match {
-      case _ if xClientId.isEmpty                               => Future.successful(BadRequest("Missing x-client-id header"))
-      case _ if xClientId != appConfig.treXClientId             => Future.successful(Forbidden("Invalid x-client-id header"))
-      case _ if informationType.isEmpty                         => Future.successful(BadRequest("Missing information type"))
-      case _ if informationType != appConfig.treInformationType =>
-        Future.successful(Forbidden("Invalid information type"))
-      case _ if eori.isEmpty                                    => Future.successful(BadRequest("Missing x-sdes-key header"))
-      case _ if !allowedEoris.contains(eori)                    => Future.successful(Forbidden("x-sdes-key/EORI not allowed"))
-      case _                                                    =>
-        request.body.asJson.flatMap(_.asOpt[Seq[FileAvailableStubRequest]]) match {
-          case Some(requests) if requests.nonEmpty =>
-            val responseJson = generateFilesAvailableJson(eori, requests)
-            Future.successful(Ok(responseJson))
-          case _                                   =>
-            Future.successful(BadRequest("Invalid or missing requests in JSON body"))
-        }
-      // Future.successful(jsonResourceAsResponse("resources/FilesAvailableResponse.json", eori))
-    }
+    val eori: String = request.headers.get(XSdesKey.toString).getOrElse("")
+      eori match {
+        case _ if xClientId.isEmpty => Future.successful(BadRequest("Missing x-client-id header"))
+        case _ if xClientId != appConfig.treXClientId => Future.successful(Forbidden("Invalid x-client-id header"))
+        case _ if informationType.isEmpty => Future.successful(BadRequest("Missing information type"))
+        case _ if informationType != appConfig.treInformationType =>
+          Future.successful(Forbidden("Invalid information type"))
+        case _ if eori.isEmpty => Future.successful(BadRequest("Missing x-sdes-key header"))
+        case _ if !allowedEoris.contains(eori) => Future.successful(Forbidden("x-sdes-key/EORI not allowed"))
+        case _ => generateFilesAvailableJson(eori).map(json => Ok(json))
+      }
   }
 
   private def generateFilesAvailableJson(
-    eori: String,
-    requests: Seq[FileAvailableStubRequest]
-  ): JsValue = {
+                                          eori: String
+                                        ): Future[JsValue] = {
     val template = Source.fromResource("resources/FilesAvailableResponse.json").mkString
-
-    val allParts = requests.flatMap { req =>
-      (1 to req.fileParts).map { partNum =>
-        val replaced = template
-          .replace("{{EORI_VALUE}}", eori)
-          .replace("{{REPORT_ID}}", req.reportRequestId)
-          .replace("{{PART_NUM}}", partNum.toString)
-          .replace("{{TOTAL_PARTS}}", req.fileParts.toString)
-        Json.parse(replaced)
+    fa.getAvailableReports(eori)(HeaderCarrier()).map { reports =>
+      if (reports.isEmpty) {
+        Json.parse("")
+      } else {
+        val jsonStrings = reports.map { r =>
+          template
+            .replace("{{EORI_VALUE}}", eori)
+            .replace("{{COR_ID}}", r.correlationId)
+            .replace("{{REP_ID}}", r.reportRequestId)
+            .replace("{{REP_TYP}}", r.reportTypeName.toString)
+        }
+        Json.parse(s"[${jsonStrings.mkString(",")}]")
       }
     }
-    JsArray(allParts)
   }
 }
