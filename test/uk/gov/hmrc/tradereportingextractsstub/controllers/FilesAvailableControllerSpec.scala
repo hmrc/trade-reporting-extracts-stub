@@ -33,8 +33,8 @@ class FilesAvailableControllerSpec extends SpecBase {
 
   "GET /files-available/list/GB123456789012" should {
     "return 200" in {
-      val mockFileAvailableService = mock[FileAvailableService]
-      val stubRequest = FileAvailableStubRequest(
+      val mockFileAvailableService                    = mock[FileAvailableService]
+      val stubRequest                                 = FileAvailableStubRequest(
         correlationId = "some-correlation-id",
         requesterEORI = Seq("GB123456789012"),
         reportRequestId = "REPORT_ID_123",
@@ -51,7 +51,7 @@ class FilesAvailableControllerSpec extends SpecBase {
       running(app) {
         val request = FakeRequest(GET, routes.FilesAvailableController.filesAvailable("TRE").url)
           .withHeaders("x-client-id" -> "TRE-CLIENT-ID", "x-sdes-key" -> "GB123456789012")
-        val result = route(app, request).value
+        val result  = route(app, request).value
         status(result) shouldBe Status.OK
       }
     }

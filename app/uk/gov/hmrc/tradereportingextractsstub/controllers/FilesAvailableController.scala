@@ -61,7 +61,7 @@ class FilesAvailableController @Inject() (
       if (reports.isEmpty) {
         Json.parse("")
       } else {
-        val jsonStrings = reports.map { r =>
+        val jsonStrings     = reports.map { r =>
           template
             .replace("{{EORI_VALUE}}", eori)
             .replace("{{COR_ID}}", r.correlationId)
@@ -69,7 +69,8 @@ class FilesAvailableController @Inject() (
             .replace("{{REP_TYP}}", r.reportTypeName.toString)
         }
         val jsonArrayString = s"[${jsonStrings.mkString(",")}]"
-        if (jsonStrings.nonEmpty) Json.parse(jsonArrayString) else Json.arr()      }
+        if (jsonStrings.nonEmpty) Json.parse(jsonArrayString) else Json.arr()
+      }
     }
   }
 }
