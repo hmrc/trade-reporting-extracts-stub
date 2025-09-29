@@ -24,39 +24,36 @@ import java.time.format.DateTimeFormatter
 import java.util.Locale
 
 case class AvailableReportsViewModel(
-                                      availableUserReports: Option[Seq[AvailableUserReportsViewModel]],
-                                      availableThirdPartyReports: Option[Seq[AvailableThirdPartyReportsViewModel]]
-                                    )
+  availableUserReports: Option[Seq[AvailableUserReportsViewModel]],
+  availableThirdPartyReports: Option[Seq[AvailableThirdPartyReportsViewModel]]
+)
 
 object AvailableReportsViewModel {
   implicit lazy val format: Format[AvailableReportsViewModel] = (
     (__ \ "availableUserReports").formatNullable[Seq[AvailableUserReportsViewModel]] and
       (__ \ "availableThirdPartyReports").formatNullable[Seq[AvailableThirdPartyReportsViewModel]]
-    )(AvailableReportsViewModel.apply, o => Tuple.fromProductTyped(o))
+  )(AvailableReportsViewModel.apply, o => Tuple.fromProductTyped(o))
 }
 
-
 case class AvailableThirdPartyReportsViewModel(
-                                                reportName: String,
-                                                referenceNumber: String,
-                                                expiryDate: Instant,
-                                                reportType: ReportTypeName,
-                                                companyName: String,
-                                                action: Seq[AvailableReportAction]
-                                              )
+  reportName: String,
+  referenceNumber: String,
+  expiryDate: Instant,
+  reportType: ReportTypeName,
+  companyName: String,
+  action: Seq[AvailableReportAction]
+)
 
 object AvailableThirdPartyReportsViewModel {
   implicit val format: OFormat[AvailableThirdPartyReportsViewModel] = Json.format[AvailableThirdPartyReportsViewModel]
 }
 
-
-
 case class AvailableUserReportsViewModel(
-                                          reportName: String,
-                                          referenceNumber: String,
-                                          expiryDate: Instant,
-                                          reportType: ReportTypeName,
-                                        ) {
+  reportName: String,
+  referenceNumber: String,
+  expiryDate: Instant,
+  reportType: ReportTypeName
+) {
   def formattedExpiryDate: String =
     AvailableUserReportsViewModel.dateFormatter.format(expiryDate.atZone(java.time.ZoneOffset.UTC).toLocalDate)
   def formattedReportType: String = AvailableUserReportsViewModel.getReportType(reportType)
@@ -82,17 +79,15 @@ object AvailableUserReportsViewModel {
   implicit val format: OFormat[AvailableUserReportsViewModel] =
     Json.format[AvailableUserReportsViewModel]
 
-
 }
 
 case class AvailableReportAction(
-                                  fileName: String,
-                                  fileURL: String,
-                                  size: Long,
-                                  fileType: FileType
-                                )
+  fileName: String,
+  fileURL: String,
+  size: Long,
+  fileType: FileType
+)
 
 object AvailableReportAction {
   implicit val format: OFormat[AvailableReportAction] = Json.format[AvailableReportAction]
 }
-

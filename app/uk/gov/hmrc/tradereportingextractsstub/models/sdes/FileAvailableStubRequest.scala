@@ -20,11 +20,11 @@ import play.api.libs.json.*
 import uk.gov.hmrc.tradereportingextractsstub.models.ReportTypeName
 
 case class FileAvailableStubRequest(
-                                     correlationId: String,
-                                     requesterEORI: Seq[String],
-                                     reportRequestId : String,
-                                     reportTypeName : ReportTypeName
-                                    )
+  correlationId: String,
+  requesterEORI: Seq[String],
+  reportRequestId: String,
+  reportTypeName: ReportTypeName
+)
 
 object FileAvailableStubRequest {
   implicit lazy val requestJsonFormat: Format[FileAvailableStubRequest] = Json.format[FileAvailableStubRequest]

@@ -18,7 +18,6 @@ package uk.gov.hmrc.tradereportingextractsstub.models
 
 import play.api.libs.json.{Format, JsError, JsResult, JsString, JsSuccess, JsValue}
 
-
 enum FileType:
   case CSV, XML
 
@@ -32,7 +31,6 @@ object FileType:
           case Some(fileType) => JsSuccess(fileType)
           case None           => JsError(s"Unknown FileType: $value")
       case _               => JsError("FileType must be a string")
-
 
 enum ReportTypeName:
   case IMPORTS_ITEM_REPORT, IMPORTS_HEADER_REPORT, IMPORTS_TAXLINE_REPORT, EXPORTS_ITEM_REPORT

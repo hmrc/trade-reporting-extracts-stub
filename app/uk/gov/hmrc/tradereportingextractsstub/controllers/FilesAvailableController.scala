@@ -34,27 +34,28 @@ class FilesAvailableController @Inject() (
   cc: ControllerComponents,
   fa: FileAvailableService,
   appConfig: AppConfig
-) (implicit ec: ExecutionContext) extends AbstractController(cc)
+)(implicit ec: ExecutionContext)
+    extends AbstractController(cc)
     with AllowedEoris {
 
   def filesAvailable(informationType: String): Action[AnyContent] = Action.async { request =>
     val xClientId: String = request.headers.get(XClientId.toString).getOrElse("")
-    val eori: String = request.headers.get(XSdesKey.toString).getOrElse("")
-      eori match {
-        case _ if xClientId.isEmpty => Future.successful(BadRequest("Missing x-client-id header"))
-        case _ if xClientId != appConfig.treXClientId => Future.successful(Forbidden("Invalid x-client-id header"))
-        case _ if informationType.isEmpty => Future.successful(BadRequest("Missing information type"))
-        case _ if informationType != appConfig.treInformationType =>
-          Future.successful(Forbidden("Invalid information type"))
-        case _ if eori.isEmpty => Future.successful(BadRequest("Missing x-sdes-key header"))
-        case _ if !allowedEoris.contains(eori) => Future.successful(Forbidden("x-sdes-key/EORI not allowed"))
-        case _ => generateFilesAvailableJson(eori).map(json => Ok(json))
-      }
+    val eori: String      = request.headers.get(XSdesKey.toString).getOrElse("")
+    eori match {
+      case _ if xClientId.isEmpty                               => Future.successful(BadRequest("Missing x-client-id header"))
+      case _ if xClientId != appConfig.treXClientId             => Future.successful(Forbidden("Invalid x-client-id header"))
+      case _ if informationType.isEmpty                         => Future.successful(BadRequest("Missing information type"))
+      case _ if informationType != appConfig.treInformationType =>
+        Future.successful(Forbidden("Invalid information type"))
+      case _ if eori.isEmpty                                    => Future.successful(BadRequest("Missing x-sdes-key header"))
+      case _ if !allowedEoris.contains(eori)                    => Future.successful(Forbidden("x-sdes-key/EORI not allowed"))
+      case _                                                    => generateFilesAvailableJson(eori).map(json => Ok(json))
+    }
   }
 
   private def generateFilesAvailableJson(
-                                          eori: String
-                                        ): Future[JsValue] = {
+    eori: String
+  ): Future[JsValue] = {
     val template = Source.fromResource("resources/FilesAvailableResponse.json").mkString
     fa.getAvailableReports(eori)(HeaderCarrier()).map { reports =>
       if (reports.isEmpty) {
@@ -67,8 +68,8 @@ class FilesAvailableController @Inject() (
             .replace("{{REP_ID}}", r.reportRequestId)
             .replace("{{REP_TYP}}", r.reportTypeName.toString)
         }
-        Json.parse(s"[${jsonStrings.mkString(",")}]")
-      }
+        val jsonArrayString = s"[${jsonStrings.mkString(",")}]"
+        if (jsonStrings.nonEmpty) Json.parse(jsonArrayString) else Json.arr()      }
     }
   }
 }

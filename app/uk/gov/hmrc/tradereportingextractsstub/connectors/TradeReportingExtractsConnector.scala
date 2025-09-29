@@ -27,8 +27,8 @@ import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FileAvailableStubReque
 import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
-class TradeReportingExtractsConnector  @Inject()(appConfig: AppConfig, httpClient: HttpClientV2)(
-  implicit ec: ExecutionContext
+class TradeReportingExtractsConnector @Inject() (appConfig: AppConfig, httpClient: HttpClientV2)(implicit
+  ec: ExecutionContext
 ) extends Logging {
 
   def getAvailableReports(eoriNumber: String)(implicit hc: HeaderCarrier): Future[Seq[FileAvailableStubRequest]] =

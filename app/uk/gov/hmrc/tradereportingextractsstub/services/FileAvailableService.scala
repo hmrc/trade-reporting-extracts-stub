@@ -28,12 +28,12 @@ import javax.inject.Inject
 import scala.concurrent.{ExecutionContext, Future}
 
 class FileAvailableService @Inject() (httpClient: HttpClientV2)(implicit
-                                                                appConfig: AppConfig,
-                                                                ec: ExecutionContext,
-                                                                connector: TradeReportingExtractsConnector
+  appConfig: AppConfig,
+  ec: ExecutionContext,
+  connector: TradeReportingExtractsConnector
 ) extends Logging {
   def getAvailableReports(eori: String)(implicit
-                                        hc: HeaderCarrier
-  ):  Future[Seq[FileAvailableStubRequest]] =
+    hc: HeaderCarrier
+  ): Future[Seq[FileAvailableStubRequest]] =
     connector.getAvailableReports(eori)
 }

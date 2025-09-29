@@ -16,32 +16,42 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.controllers
 
+import org.mockito.ArgumentMatchers.any
+import org.mockito.Mockito.when
 import org.scalatest.matchers.should.Matchers.{should, shouldBe}
-import play.api.Application
+import play.api.{Application, inject}
 import play.api.http.Status
 import play.api.libs.json.Json
 import play.api.test.Helpers.{GET, route, running, status, writeableOf_AnyContentAsEmpty, writeableOf_AnyContentAsJson}
 import play.api.test.{FakeRequest, Helpers}
+import uk.gov.hmrc.tradereportingextractsstub.models.ReportTypeName
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FileAvailableStubRequest
+import uk.gov.hmrc.tradereportingextractsstub.services.FileAvailableService
 import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
 
 class FilesAvailableControllerSpec extends SpecBase {
 
   "GET /files-available/list/GB123456789012" should {
-    "return 200" in new Setup {
+    "return 200" in {
+      val mockFileAvailableService = mock[FileAvailableService]
+      val stubRequest = FileAvailableStubRequest(
+        correlationId = "some-correlation-id",
+        requesterEORI = Seq("GB123456789012"),
+        reportRequestId = "REPORT_ID_123",
+        reportTypeName = ReportTypeName.IMPORTS_ITEM_REPORT
+      )
+      val stubRequests: Seq[FileAvailableStubRequest] = Seq(stubRequest)
+      when(mockFileAvailableService.getAvailableReports(any())(using any()))
+        .thenReturn(scala.concurrent.Future.successful(stubRequests))
+
+      val app = application
+        .overrides(inject.bind[FileAvailableService].toInstance(mockFileAvailableService))
+        .build()
+
       running(app) {
-
-        val stubRequest  = FileAvailableStubRequest(
-          reportRequestId = "REPORT_ID_123",
-          fileParts = 2
-        )
-        val stubRequests = Seq(stubRequest)
-        val jsonBody     = Json.toJson(stubRequests)  
-
         val request = FakeRequest(GET, routes.FilesAvailableController.filesAvailable("TRE").url)
           .withHeaders("x-client-id" -> "TRE-CLIENT-ID", "x-sdes-key" -> "GB123456789012")
-          .withJsonBody(jsonBody)
-        val result  = route(app, request).value
+        val result = route(app, request).value
         status(result) shouldBe Status.OK
       }
     }
