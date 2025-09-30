@@ -20,8 +20,8 @@ import play.api.libs.json.*
 import play.api.mvc.*
 import uk.gov.hmrc.tradereportingextractsstub.config.AppConfig
 import uk.gov.hmrc.tradereportingextractsstub.models.AllowedEoris
+import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders.*
-import uk.gov.hmrc.tradereportingextractsstub.models.sdes.{FileAvailableStubRequest, FilesAvailableHeaders}
 
 import javax.inject.{Inject, Singleton}
 import scala.concurrent.Future
@@ -46,34 +46,18 @@ class FilesAvailableController @Inject() (
         Future.successful(Forbidden("Invalid information type"))
       case _ if eori.isEmpty                                    => Future.successful(BadRequest("Missing x-sdes-key header"))
       case _ if !allowedEoris.contains(eori)                    => Future.successful(Forbidden("x-sdes-key/EORI not allowed"))
-      case _                                                    =>
-        request.body.asJson.flatMap(_.asOpt[Seq[FileAvailableStubRequest]]) match {
-          case Some(requests) if requests.nonEmpty =>
-            val responseJson = generateFilesAvailableJson(eori, requests)
-            Future.successful(Ok(responseJson))
-          case _                                   =>
-            Future.successful(BadRequest("Invalid or missing requests in JSON body"))
-        }
+      case _                                                    => Future.successful(Ok(generateFilesAvailableJson(eori)))
       // Future.successful(jsonResourceAsResponse("resources/FilesAvailableResponse.json", eori))
     }
   }
 
-  private def generateFilesAvailableJson(
-    eori: String,
-    requests: Seq[FileAvailableStubRequest]
-  ): JsValue = {
+  private def generateFilesAvailableJson(eori: String): JsValue = {
     val template = Source.fromResource("resources/FilesAvailableResponse.json").mkString
-
-    val allParts = requests.flatMap { req =>
-      (1 to req.fileParts).map { partNum =>
-        val replaced = template
-          .replace("{{EORI_VALUE}}", eori)
-          .replace("{{REPORT_ID}}", req.reportRequestId)
-          .replace("{{PART_NUM}}", partNum.toString)
-          .replace("{{TOTAL_PARTS}}", req.fileParts.toString)
-        Json.parse(replaced)
-      }
-    }
-    JsArray(allParts)
+    val replaced = template
+      .replace("{{EORI_VALUE}}", eori)
+      .replace("{{REPORT_ID}}", "")
+      .replace("{{PART_NUM}}", "1")
+      .replace("{{TOTAL_PARTS}}", "1")
+    JsArray(Seq(Json.parse(replaced)))
   }
 }
