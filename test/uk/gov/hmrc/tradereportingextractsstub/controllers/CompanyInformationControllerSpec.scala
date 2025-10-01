@@ -24,20 +24,28 @@ import play.api.test.Helpers.{POST, contentAsJson, route, status}
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.tradereportingextractsstub.models.{AddressInformation, CompanyInformation, EoriRequest}
 import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
+import scala.concurrent.Future
+import play.api.libs.json.JsValue
+import play.api.mvc.Result
 
 class CompanyInformationControllerSpec extends SpecBase {
 
   "GET /company-information" should {
     "return 200" in new Setup {
 
-      val eoriRequest = EoriRequest(eori = "GB123456789012")
-      val request     = FakeRequest(POST, routes.CompanyInformationController.companyInformation().url)
-        .withBody(Json.toJson(eoriRequest))
-      val result      = route(app, request).value
+      val eoriRequest                   = EoriRequest(eori = "GB123456789012")
+      val request: FakeRequest[JsValue] =
+        FakeRequest(POST, routes.CompanyInformationController.companyInformation().url)
+          .withBody(Json.toJson(eoriRequest))
+      val result: Future[Result]        = route(app, request).value
       status(result) shouldBe OK
-      val expectedObj =
-        CompanyInformation("ABC Company", "1", AddressInformation("XYZ Street", "ABC City", Some("G11 2ZZ"), "GB"))
-      val actualObj   = contentAsJson(result).as[CompanyInformation]
+      val expectedObj                   =
+        CompanyInformation(
+          "GB Ltd - GB123456789012",
+          "1",
+          AddressInformation("XYZ Street", "ABC City", Some("G11 2ZZ"), "GB")
+        )
+      val actualObj: CompanyInformation = contentAsJson(result).as[CompanyInformation]
       actualObj shouldBe expectedObj
     }
   }

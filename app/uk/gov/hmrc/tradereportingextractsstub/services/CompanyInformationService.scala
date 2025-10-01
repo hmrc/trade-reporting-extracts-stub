@@ -22,7 +22,15 @@ class CompanyInformationService:
 
   def companyInformation(eori: String): CompanyInformation =
     CompanyInformation(
-      "ABC Company",
+      eori match {
+        case eori if eori.startsWith("GB11") => s"GB Trader Ltd - $eori"
+        case eori if eori.startsWith("XI11") => s"XI Trader Ltd - $eori"
+        case eori if eori.startsWith("GB33") => s"GB Third Party Ltd - $eori"
+        case eori if eori.startsWith("XI33") => s"XI Third Party Ltd - $eori"
+        case eori if eori.startsWith("GB")   => s"GB Ltd - $eori"
+        case eori if eori.startsWith("XI")   => s"XI Ltd - $eori"
+        case _                               => ""
+      },
       "1",
       AddressInformation(
         "XYZ Street",
