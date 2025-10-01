@@ -24,6 +24,6 @@ class NotificationEmailService extends AllowedEoris:
 
   def notificationEmail(eori: String): NotificationEmail =
     NotificationEmail(
-      "example@test.com",
+      s"$eori@company.com",
       LocalDateTime.parse("2025-01-01T12:00:00")
     )
