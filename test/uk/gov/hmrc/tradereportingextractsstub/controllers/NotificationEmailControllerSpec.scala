@@ -32,14 +32,17 @@ class NotificationEmailControllerSpec extends SpecBase {
   "GET /verified-email" should {
     "return 200" in new Setup {
 
-      val eoriRequest = EoriRequest(eori = "GB123456789012")
-      val request     = FakeRequest(POST, routes.NotificationEmailController.notificationEmail().url)
+      val eoriRequest                   = EoriRequest(eori = "GB123456789012")
+      val request: FakeRequest[JsValue] = FakeRequest(POST, routes.NotificationEmailController.notificationEmail().url)
         .withBody(Json.toJson(eoriRequest))
-      val result      = route(app, request).value
+      val result: Future[Result]        = route(app, request).value
       status(result) shouldBe OK
-      val expectedEmail =
-        NotificationEmail(address = "example@test.com", timestamp = LocalDateTime.parse("2025-01-01T12:00:00"))
-      val actualEmail   = contentAsJson(result).as[NotificationEmail]
+      val expectedEmail                  =
+        NotificationEmail(
+          address = "GB123456789012@company.com",
+          timestamp = LocalDateTime.parse("2025-01-01T12:00:00")
+        )
+      val actualEmail: NotificationEmail = contentAsJson(result).as[NotificationEmail]
       actualEmail shouldBe expectedEmail
     }
   }
