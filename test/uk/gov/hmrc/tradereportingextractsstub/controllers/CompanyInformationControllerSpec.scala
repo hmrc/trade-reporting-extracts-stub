@@ -24,6 +24,9 @@ import play.api.test.Helpers.{POST, contentAsJson, route, status}
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.tradereportingextractsstub.models.{AddressInformation, CompanyInformation, EoriRequest}
 import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
+import scala.concurrent.Future
+import play.api.libs.json.JsValue
+import play.api.mvc.Result
 
 class CompanyInformationControllerSpec extends SpecBase {
 

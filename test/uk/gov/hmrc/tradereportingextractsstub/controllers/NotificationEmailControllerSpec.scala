@@ -24,6 +24,9 @@ import play.api.test.Helpers.*
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.tradereportingextractsstub.models.{EoriRequest, NotificationEmail}
 import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
+import scala.concurrent.Future
+import play.api.libs.json.JsValue
+import play.api.mvc.Result
 
 import java.time.LocalDateTime
 
