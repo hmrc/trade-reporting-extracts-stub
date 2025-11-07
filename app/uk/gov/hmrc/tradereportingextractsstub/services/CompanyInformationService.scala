@@ -21,17 +21,30 @@ import uk.gov.hmrc.tradereportingextractsstub.models.{AddressInformation, Compan
 class CompanyInformationService:
 
   def companyInformation(eori: String): CompanyInformation =
-    CompanyInformation(
-      eori match {
-        case eori if eori.startsWith("GB11") => s"GB Trader Ltd - $eori"
-        case eori if eori.startsWith("XI11") => s"XI Trader Ltd - $eori"
-        case eori if eori.startsWith("GB33") => s"GB Third Party Ltd - $eori"
-        case eori if eori.startsWith("XI33") => s"XI Third Party Ltd - $eori"
-        case eori if eori.startsWith("GB")   => s"GB Ltd - $eori"
-        case eori if eori.startsWith("XI")   => s"XI Ltd - $eori"
-        case _                               => ""
-      },
-      "1",
+    
+    var companyInfo: String = "DEFAULT COMPANY (NOT-REAL-EORI)"
+    var consent: String = "1"
+
+    eori match {
+      case eori if eori.startsWith("GB999999999999") => { // "No consent"
+        companyInfo = "DEBUG TESTING NO-CONSENT COMPANY" 
+        consent = "0"
+      }
+      case eori if eori.startsWith("GB666666666666") => { // "Enter a real EORI number error"
+        companyInfo = "" 
+      }
+      case eori if eori.startsWith("GB") => {
+        companyInfo = "DEBUG TESTING GB COMPANY (UK) LTD" 
+      } 
+      case eori if eori.startsWith("XI") => {
+        companyInfo = "DEBUG TESTING XI COMPANY (NIR) LTD"
+      } 
+      case _  => {} 
+    }
+
+    return CompanyInformation(
+      companyInfo,
+      consent,
       AddressInformation(
         "XYZ Street",
         "ABC City",
