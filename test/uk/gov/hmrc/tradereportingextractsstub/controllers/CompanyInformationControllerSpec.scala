@@ -41,7 +41,7 @@ class CompanyInformationControllerSpec extends SpecBase {
       status(result) shouldBe OK
       val expectedObj                   =
         CompanyInformation(
-          "GB Ltd - GB123456789012",
+          "DEBUG TESTING GB COMPANY (UK) LTD",
           "1",
           AddressInformation("XYZ Street", "ABC City", Some("G11 2ZZ"), "GB")
         )
