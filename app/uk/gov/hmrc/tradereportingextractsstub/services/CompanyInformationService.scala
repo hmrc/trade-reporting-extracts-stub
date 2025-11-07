@@ -26,16 +26,16 @@ class CompanyInformationService:
     var consent: String     = "1"
 
     eori match {
-      case eori if eori.startsWith("GB999999999999") => // "No consent"
+      case eori if eori.startsWith("GB99") => // "No consent"
         companyInfo = "DEBUG TESTING NO-CONSENT COMPANY"
         consent = "0"
-      case eori if eori.startsWith("GB666666666666") => // "Enter a real EORI number error"
+      case eori if eori.startsWith("GB66") => // "Enter a real EORI number" error
         companyInfo = ""
-      case eori if eori.startsWith("GB")             =>
+      case eori if eori.startsWith("GB")   =>
         companyInfo = "DEBUG TESTING GB COMPANY (UK) LTD"
-      case eori if eori.startsWith("XI")             =>
+      case eori if eori.startsWith("XI")   =>
         companyInfo = "DEBUG TESTING XI COMPANY (NIR) LTD"
-      case _                                         =>
+      case _                               =>
     }
 
     return CompanyInformation(
