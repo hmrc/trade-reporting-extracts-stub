@@ -57,6 +57,28 @@ class FilesAvailableControllerSpec extends SpecBase {
     }
   }
   "GET /files-available/list/GB123456789012" should {
+    "return 400 xClientId is empty" in new Setup {
+      running(app) {
+        val request = FakeRequest(GET, routes.FilesAvailableController.filesAvailable("TRE").url)
+          .withHeaders("x-sdes-key" -> "GB123456789012")
+        val result  = route(app, request).value
+        status(result) shouldBe Status.BAD_REQUEST
+      }
+    }
+  }
+
+  "GET /files-available/list/GB123456789012" should {
+    "return 400 when eori" in new Setup {
+      running(app) {
+        val request = FakeRequest(GET, routes.FilesAvailableController.filesAvailable("TRE").url)
+          .withHeaders("x-client-id" -> "TRE-CLIENT-ID")
+        val result  = route(app, request).value
+        status(result) shouldBe Status.BAD_REQUEST
+      }
+    }
+  }
+
+  "GET /files-available/list/GB123456789012" should {
     "return 403 invalid eori" in new Setup {
       running(app) {
         val request = FakeRequest(GET, routes.FilesAvailableController.filesAvailable("TRE").url)

@@ -41,7 +41,6 @@ class FilesAvailableController @Inject() (
     eori match {
       case _ if xClientId.isEmpty                               => Future.successful(BadRequest("Missing x-client-id header"))
       case _ if xClientId != appConfig.treXClientId             => Future.successful(Forbidden("Invalid x-client-id header"))
-      case _ if informationType.isEmpty                         => Future.successful(BadRequest("Missing information type"))
       case _ if informationType != appConfig.treInformationType =>
         Future.successful(Forbidden("Invalid information type"))
       case _ if eori.isEmpty                                    => Future.successful(BadRequest("Missing x-sdes-key header"))
