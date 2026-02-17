@@ -52,6 +52,32 @@ class EisReportControllerSpec extends SpecBase {
       val result  = route(app, request).value
       status(result) shouldBe NO_CONTENT
     }
+
+    "return 403 Forbidden with incorrect auth token" in new Setup {
+      val request = FakeRequest(PUT, routes.EisReportController.requestTraderReport().url)
+        .withHeaders(
+          "accept"           -> "application/json",
+          "authorization"    -> "foobar",
+          "content-type"     -> "application/json",
+          "date"             -> "Mon, 02 Oct 2023 14:30:00 GMT",
+          "x-correlation-id" -> "46cd6ed6-21ba-4e05-975e-56d02011243c",
+          "x-forwarded-host" -> "CDAP"
+        )
+        .withJsonBody(
+          Json.obj(
+            "endDate"          -> "2024-06-30T23:59:59Z",
+            "eori"             -> Json.arr("GB123456789012", "GB123456789013"),
+            "eoriRole"         -> "TRADER",
+            "reportTypeName"   -> "IMPORTS-ITEM-REPORT",
+            "requestID"        -> "RE57965342",
+            "requestTimestamp" -> "2024-06-01T12:00:00Z",
+            "requesterEori"    -> "GB123456789012",
+            "startDate"        -> "2024-06-01T00:00:00Z"
+          )
+        )
+      val result  = route(app, request).value
+      status(result) shouldBe FORBIDDEN
+    }
     "return 400 BadRequest with invalid header" in new Setup {
       val request = FakeRequest(PUT, routes.EisReportController.requestTraderReport().url)
         .withHeaders(
@@ -114,6 +140,60 @@ class EisReportControllerSpec extends SpecBase {
       val result  = route(app, request).value
       status(result)        shouldBe BAD_REQUEST
       contentAsString(result) should include("Invalid value at path /requestID: error.path.missing")
+    }
+  }
+
+  "serverOtherMethods" should {
+    "return MethodNotAllowed for anything not a PUT" in new Setup {
+      val request = FakeRequest(GET, routes.EisReportController.requestTraderReport().url)
+        .withHeaders(
+          "accept"           -> "application/json",
+          "authorization"    -> "Bearer EisAuthToken",
+          "content-type"     -> "application/json",
+          "date"             -> "Mon, 02 Oct 2023 14:30:00 GMT",
+          "x-correlation-id" -> "46cd6ed6-21ba-4e05-975e-56d02011243c",
+          "x-forwarded-host" -> "CDAP"
+        )
+        .withJsonBody(
+          Json.obj(
+            "endDate"          -> "2024-06-30T23:59:59Z",
+            "eori"             -> Json.arr("GB123456789012", "GB123456789013"),
+            "eoriRole"         -> "TRADER",
+            "reportTypeName"   -> "IMPORTS-ITEM-REPORT",
+            "requestTimestamp" -> "2024-06-01T12:00:00Z",
+            "requesterEori"    -> "GB123456789012",
+            "startDate"        -> "2024-06-01T00:00:00Z"
+          )
+        )
+      val result  = route(app, request).value
+      status(result) shouldBe METHOD_NOT_ALLOWED
+    }
+  }
+
+  "serverOthers" should {
+    "return NOT_FOUND for any other URL" in new Setup {
+      val request = FakeRequest(GET, routes.EisReportController.serverOthers().url)
+        .withHeaders(
+          "accept"           -> "application/json",
+          "authorization"    -> "Bearer EisAuthToken",
+          "content-type"     -> "application/json",
+          "date"             -> "Mon, 02 Oct 2023 14:30:00 GMT",
+          "x-correlation-id" -> "46cd6ed6-21ba-4e05-975e-56d02011243c",
+          "x-forwarded-host" -> "CDAP"
+        )
+        .withJsonBody(
+          Json.obj(
+            "endDate"          -> "2024-06-30T23:59:59Z",
+            "eori"             -> Json.arr("GB123456789012", "GB123456789013"),
+            "eoriRole"         -> "TRADER",
+            "reportTypeName"   -> "IMPORTS-ITEM-REPORT",
+            "requestTimestamp" -> "2024-06-01T12:00:00Z",
+            "requesterEori"    -> "GB123456789012",
+            "startDate"        -> "2024-06-01T00:00:00Z"
+          )
+        )
+      val result  = route(app, request).value
+      status(result) shouldBe NOT_FOUND
     }
   }
   trait Setup {
