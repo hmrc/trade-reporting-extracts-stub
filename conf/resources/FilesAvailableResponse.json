@@ -1,6 +1,6 @@
 {
-"filename": "pvat-2018-06.csv",
-"downloadURL": "https://raw.githubusercontent.com/hmrc/trade-reporting-extracts/refs/heads/main/resources/payload/example%20payload.txt",
+"filename": "test-2018-06.csv",
+"downloadURL": "https://assets.publishing.service.gov.uk/media/699ed0cbdb2401de164d6cdb/Example_imports_item_report.csv",
 "fileSize": 1234,
 "metadata": [
   { "metadata": "FileCreationTimestamp", "value": "30" },
