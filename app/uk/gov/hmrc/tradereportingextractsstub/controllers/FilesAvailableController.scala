@@ -19,7 +19,6 @@ package uk.gov.hmrc.tradereportingextractsstub.controllers
 import play.api.libs.json.*
 import play.api.mvc.*
 import uk.gov.hmrc.tradereportingextractsstub.config.AppConfig
-import uk.gov.hmrc.tradereportingextractsstub.models.AllowedEoris
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders
 import uk.gov.hmrc.tradereportingextractsstub.models.sdes.FilesAvailableHeaders.*
 
@@ -31,8 +30,7 @@ import scala.io.Source
 class FilesAvailableController @Inject() (
   cc: ControllerComponents,
   appConfig: AppConfig
-) extends AbstractController(cc)
-    with AllowedEoris {
+) extends AbstractController(cc) {
 
   def filesAvailable(informationType: String): Action[AnyContent] = Action.async { request =>
     val xClientId: String = request.headers.get(XClientId.toString).getOrElse("")
@@ -44,9 +42,7 @@ class FilesAvailableController @Inject() (
       case _ if informationType != appConfig.treInformationType =>
         Future.successful(Forbidden("Invalid information type"))
       case _ if eori.isEmpty                                    => Future.successful(BadRequest("Missing x-sdes-key header"))
-      case _ if !allowedEoris.contains(eori)                    => Future.successful(Forbidden("x-sdes-key/EORI not allowed"))
       case _                                                    => Future.successful(Ok(generateFilesAvailableJson(eori)))
-      // Future.successful(jsonResourceAsResponse("resources/FilesAvailableResponse.json", eori))
     }
   }
 

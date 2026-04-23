@@ -16,11 +16,11 @@
 
 package uk.gov.hmrc.tradereportingextractsstub.services
 
-import uk.gov.hmrc.tradereportingextractsstub.models.{AllowedEoris, NotificationEmail}
+import uk.gov.hmrc.tradereportingextractsstub.models.NotificationEmail
 
 import java.time.LocalDateTime
 
-class NotificationEmailService extends AllowedEoris:
+class NotificationEmailService:
 
   def notificationEmail(eori: String): NotificationEmail =
     NotificationEmail(

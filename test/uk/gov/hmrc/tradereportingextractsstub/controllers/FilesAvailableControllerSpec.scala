@@ -77,17 +77,6 @@ class FilesAvailableControllerSpec extends SpecBase {
       }
     }
   }
-
-  "GET /files-available/list/GB123456789012" should {
-    "return 403 invalid eori" in new Setup {
-      running(app) {
-        val request = FakeRequest(GET, routes.FilesAvailableController.filesAvailable("TRE").url)
-          .withHeaders("x-client-id" -> "TRE-CLIENT-ID", "x-sdes-key" -> "Invalid-Sdes-Key")
-        val result  = route(app, request).value
-        status(result) shouldBe Status.FORBIDDEN
-      }
-    }
-  }
   "GET /files-available/list/GB123456789012" should {
     "return 403 invalid information type" in new Setup {
       running(app) {
