@@ -28,14 +28,14 @@ import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
 import java.time.LocalDate
 
 class EoriHistoryControllerSpec extends SpecBase {
-  
+
   "GET /eori/gbxi-eori-history & /eori/eori-history" should {
     "return 200 from eoriTraderHistory" in new Setup {
 
       val eoriRequest = EoriRequest(eori = "GB123456789012")
-      val request = FakeRequest(GET, routes.EoriHistoryController.eoriTraderHistory().url)
+      val request     = FakeRequest(GET, routes.EoriHistoryController.eoriTraderHistory().url)
         .withBody(Json.toJson(eoriRequest))
-      val result = route(app, request).value
+      val result      = route(app, request).value
       status(result) shouldBe OK
       val expectedEoriHistory = EoriHistoryResponse(
         eoriHistory = Seq(
@@ -46,7 +46,7 @@ class EoriHistoryControllerSpec extends SpecBase {
           )
         )
       )
-      val actualEoriHistory = contentAsJson(result).as[EoriHistoryResponse]
+      val actualEoriHistory   = contentAsJson(result).as[EoriHistoryResponse]
       actualEoriHistory shouldBe expectedEoriHistory
     }
   }
@@ -55,9 +55,9 @@ class EoriHistoryControllerSpec extends SpecBase {
     "return 200 from eoriHistory" in new Setup {
 
       val eoriRequest = EoriRequest(eori = "GB123456789012")
-      val request = FakeRequest(POST, routes.EoriHistoryController.eoriHistory().url)
+      val request     = FakeRequest(POST, routes.EoriHistoryController.eoriHistory().url)
         .withBody(Json.toJson(eoriRequest))
-      val result = route(app, request).value
+      val result      = route(app, request).value
       status(result) shouldBe OK
       val expectedEoriHistory = EoriHistoryResponse(
         eoriHistory = Seq(
@@ -68,7 +68,7 @@ class EoriHistoryControllerSpec extends SpecBase {
           )
         )
       )
-      val actualEoriHistory = contentAsJson(result).as[EoriHistoryResponse]
+      val actualEoriHistory   = contentAsJson(result).as[EoriHistoryResponse]
       actualEoriHistory shouldBe expectedEoriHistory
     }
   }
