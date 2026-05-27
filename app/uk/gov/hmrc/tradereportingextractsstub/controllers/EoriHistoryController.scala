@@ -17,7 +17,7 @@
 package uk.gov.hmrc.tradereportingextractsstub.controllers
 
 import play.api.libs.json.Json
-import play.api.mvc.{Action, ControllerComponents}
+import play.api.mvc.{Action, AnyContent, ControllerComponents}
 import uk.gov.hmrc.play.bootstrap.backend.controller.BackendController
 import uk.gov.hmrc.tradereportingextractsstub.models.EoriRequest
 import uk.gov.hmrc.tradereportingextractsstub.services.EoriHistoryService
@@ -32,5 +32,10 @@ class EoriHistoryController @Inject() (eoriHistoryService: EoriHistoryService, c
   def eoriHistory(): Action[EoriRequest] = Action.async(parse.json[EoriRequest]) { implicit request =>
     val eori        = request.body.eori
     val eoriHistory = eoriHistoryService.eoriHistory(eori)
+    Future.successful(Ok(Json.toJson(eoriHistory)))
+  }
+
+  def eoriTraderHistory(): Action[AnyContent] = Action.async { implicit request =>
+    val eoriHistory = eoriHistoryService.eoriHistory("GB123456789000")
     Future.successful(Ok(Json.toJson(eoriHistory)))
   }
