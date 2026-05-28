@@ -29,13 +29,27 @@ import scala.concurrent.Future
 class EoriHistoryController @Inject() (eoriHistoryService: EoriHistoryService, cc: ControllerComponents)
     extends BackendController(cc):
 
+  // POST calls for third party to get EORI history of trader
   def eoriHistory(): Action[EoriRequest] = Action.async(parse.json[EoriRequest]) { implicit request =>
     val eori        = request.body.eori
-    val eoriHistory = eoriHistoryService.eoriHistory(eori)
+    val eoriHistory = eoriHistoryService.eoriHistory(eori, false)
     Future.successful(Ok(Json.toJson(eoriHistory)))
   }
 
+  def eoriHistoryStrategic(): Action[EoriRequest] = Action.async(parse.json[EoriRequest]) { implicit request =>
+    val eori        = request.body.eori
+    val xiRequired  = if (eori.startsWith("GB9")) true else false
+    val eoriHistory = eoriHistoryService.eoriHistory(eori, xiRequired)
+    Future.successful(Ok(Json.toJson(eoriHistory)))
+  }
+
+  // GET calls for trader to get their own EORI history
   def eoriTraderHistory(): Action[AnyContent] = Action.async { implicit request =>
-    val eoriHistory = eoriHistoryService.eoriHistory("GB123456789000")
+    val eoriHistory = eoriHistoryService.eoriHistory("GB123456789000", false)
+    Future.successful(Ok(Json.toJson(eoriHistory)))
+  }
+
+  def eoriTraderHistoryStrategic(): Action[AnyContent] = Action.async { implicit request =>
+    val eoriHistory = eoriHistoryService.eoriHistory("GB123456789000", true)
     Future.successful(Ok(Json.toJson(eoriHistory)))
   }
