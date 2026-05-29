@@ -3,6 +3,9 @@
 POST           /eori/company-information-third-party          uk.gov.hmrc.tradereportingextractsstub.controllers.CompanyInformationController.companyInformation()
 POST           /eori/verified-email-third-party               uk.gov.hmrc.tradereportingextractsstub.controllers.NotificationEmailController.notificationEmail()
 POST           /eori/eori-history-third-party                 uk.gov.hmrc.tradereportingextractsstub.controllers.EoriHistoryController.eoriHistory()
+POST           /eori/gbxi-eori-history-third-party            uk.gov.hmrc.tradereportingextractsstub.controllers.EoriHistoryController.eoriHistoryStrategic()
+GET            /eori/eori-history                             uk.gov.hmrc.tradereportingextractsstub.controllers.EoriHistoryController.eoriTraderHistory()
+GET            /eori/gbxi-eori-history                        uk.gov.hmrc.tradereportingextractsstub.controllers.EoriHistoryController.eoriTraderHistoryStrategic()
 
 
 
