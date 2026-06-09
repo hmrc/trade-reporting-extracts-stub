@@ -29,56 +29,8 @@ import java.time.LocalDate
 
 class EoriHistoryControllerSpec extends SpecBase {
 
-  "GET /eori/eori-history" should {
-    "return 200 from eoriTraderHistory" in new Setup {
-
-      val eoriRequest = EoriRequest(eori = "GB123456789012")
-      val request     = FakeRequest(GET, routes.EoriHistoryController.eoriTraderHistory().url)
-        .withBody(Json.toJson(eoriRequest))
-      val result      = route(app, request).value
-      status(result) shouldBe OK
-      val expectedEoriHistory = EoriHistoryResponse(
-        eoriHistory = Seq(
-          EoriHistory(
-            eori = "GBEORI",
-            validFrom = Some(LocalDate.parse("2025-01-01")),
-            validUntil = Some(LocalDate.parse("2025-12-31"))
-          )
-        )
-      )
-      val actualEoriHistory   = contentAsJson(result).as[EoriHistoryResponse]
-      actualEoriHistory shouldBe expectedEoriHistory
-    }
-  }
-
-  "GET /eori/gbxi-eori-history" should {
-    "return 200 from eoriTraderHistoryStrategic" in new Setup {
-      val eoriRequest = EoriRequest(eori = "GB123456789012")
-      val request     = FakeRequest(GET, routes.EoriHistoryController.eoriTraderHistoryStrategic().url)
-        .withBody(Json.toJson(eoriRequest))
-      val result      = route(app, request).value
-      status(result) shouldBe OK
-      val expectedEoriHistory = EoriHistoryResponse(
-        eoriHistory = Seq(
-          EoriHistory(
-            eori = "GBEORI",
-            validFrom = Some(LocalDate.parse("2025-01-01")),
-            validUntil = Some(LocalDate.parse("2025-12-31"))
-          ),
-          EoriHistory(
-            eori = "XIFROMSTRATEGIC",
-            validFrom = Some(LocalDate.parse("2025-01-01")),
-            validUntil = Some(LocalDate.parse("2025-12-31"))
-          )
-        )
-      )
-      val actualEoriHistory   = contentAsJson(result).as[EoriHistoryResponse]
-      actualEoriHistory shouldBe expectedEoriHistory
-    }
-  }
-
-  "POST /eori/eori-history-third-party" should {
-    "return 200 from eoriHistory" in new Setup {
+  "GET /eori-history" should {
+    "return 200" in new Setup {
 
       val eoriRequest = EoriRequest(eori = "GB123456789012")
       val request     = FakeRequest(POST, routes.EoriHistoryController.eoriHistory().url)
@@ -88,56 +40,9 @@ class EoriHistoryControllerSpec extends SpecBase {
       val expectedEoriHistory = EoriHistoryResponse(
         eoriHistory = Seq(
           EoriHistory(
-            eori = "GBEORI",
-            validFrom = Some(LocalDate.parse("2025-01-01")),
-            validUntil = Some(LocalDate.parse("2025-12-31"))
-          )
-        )
-      )
-      val actualEoriHistory   = contentAsJson(result).as[EoriHistoryResponse]
-      actualEoriHistory shouldBe expectedEoriHistory
-    }
-  }
-
-  "POST /eori/gbxi-eori-history-third-party" should {
-    "return 200 and GB only when eori begis with anything but GB9 from eoriHistoryStrategic" in new Setup {
-
-      val eoriRequest = EoriRequest(eori = "GB123456789012")
-      val request     = FakeRequest(POST, routes.EoriHistoryController.eoriHistoryStrategic().url)
-        .withBody(Json.toJson(eoriRequest))
-      val result      = route(app, request).value
-      status(result) shouldBe OK
-      val expectedEoriHistory = EoriHistoryResponse(
-        eoriHistory = Seq(
-          EoriHistory(
-            eori = "GBEORI",
-            validFrom = Some(LocalDate.parse("2025-01-01")),
-            validUntil = Some(LocalDate.parse("2025-12-31"))
-          )
-        )
-      )
-      val actualEoriHistory   = contentAsJson(result).as[EoriHistoryResponse]
-      actualEoriHistory shouldBe expectedEoriHistory
-    }
-
-    "return 200 and GB/XI when eori begis with GB9 from eoriHistoryStrategic" in new Setup {
-
-      val eoriRequest = EoriRequest(eori = "GB9")
-      val request     = FakeRequest(POST, routes.EoriHistoryController.eoriHistoryStrategic().url)
-        .withBody(Json.toJson(eoriRequest))
-      val result      = route(app, request).value
-      status(result) shouldBe OK
-      val expectedEoriHistory = EoriHistoryResponse(
-        eoriHistory = Seq(
-          EoriHistory(
-            eori = "GBEORI",
-            validFrom = Some(LocalDate.parse("2025-01-01")),
-            validUntil = Some(LocalDate.parse("2025-12-31"))
-          ),
-          EoriHistory(
-            eori = "XIFROMSTRATEGIC",
-            validFrom = Some(LocalDate.parse("2025-01-01")),
-            validUntil = Some(LocalDate.parse("2025-12-31"))
+            eori = "GB123456789012",
+            validFrom = Some(LocalDate.parse("2001-01-20")),
+            validUntil = Some(LocalDate.parse("2002-01-20"))
           )
         )
       )
