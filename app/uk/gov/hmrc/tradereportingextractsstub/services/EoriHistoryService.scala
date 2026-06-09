@@ -24,16 +24,13 @@ import scala.util.{Failure, Success, Try}
 
 class EoriHistoryService {
 
-  private val eoriDataPath: String          = "conf/response/EoriHistoricalData.json"
-  private val eoriDataPathStrategic: String = "conf/response/XIEoriHistoricalData.json"
+  private val reportsPath: String = "conf/response/EoriHistoricalData.json"
 
-  def eoriHistory(eori: String, strategicCall: Boolean): EoriHistoryResponse = {
-    val filePath = if (strategicCall) eoriDataPathStrategic else eoriDataPath
-    loadReportsFromFile(filePath) match {
+  def eoriHistory(eori: String): EoriHistoryResponse =
+    loadReportsFromFile(reportsPath) match {
       case Success(reports) => EoriHistoryResponse(reports)
       case Failure(ex)      => EoriHistoryResponse(Seq.empty[EoriHistory])
     }
-  }
 
   private def loadReportsFromFile(path: String): Try[Seq[EoriHistory]] =
     Try {

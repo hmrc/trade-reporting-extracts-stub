@@ -1,7 +1,7 @@
 [
   {
-    "eori": "GBEORI",
-    "validFrom": "2025-01-01",
-    "validUntil": "2025-12-31"
+    "eori": "GB123456789012",
+    "validFrom": "2001-01-20",
+    "validUntil": "2002-01-20"
   }
 ]
