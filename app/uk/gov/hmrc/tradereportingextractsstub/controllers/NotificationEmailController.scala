@@ -31,8 +31,15 @@ class NotificationEmailController @Inject() (
   cc: ControllerComponents
 ) extends BackendController(cc):
 
+  /*Eori ending in 999 will return NotFound for both CompanyInformation and NotificationEmail.
+  Eori ending in 997 will return NotFound for NotificationEmail only.
+  Eori ending in 998 will return Notfound for CompanyInformation only*/
   def notificationEmail(): Action[EoriRequest] = Action.async(parse.json[EoriRequest]) { implicit request =>
-    val eori              = request.body.eori
-    val notificationEmail = notificationEmailService.notificationEmail(eori)
-    Future.successful(Ok(Json.toJson(notificationEmail)))
+    val eori = request.body.eori
+    eori match {
+      case _ if eori.endsWith("999") || eori.endsWith("997") => Future.successful(NotFound)
+      case _                                                 =>
+        val notificationEmail = notificationEmailService.notificationEmail(eori)
+        Future.successful(Ok(Json.toJson(notificationEmail)))
+    }
   }
