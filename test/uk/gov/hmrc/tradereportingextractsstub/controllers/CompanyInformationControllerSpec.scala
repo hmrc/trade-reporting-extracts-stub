@@ -18,12 +18,13 @@ package uk.gov.hmrc.tradereportingextractsstub.controllers
 
 import org.scalatest.matchers.should.Matchers.{should, shouldBe}
 import play.api.Application
-import play.api.http.Status.OK
+import play.api.http.Status.{NOT_FOUND, OK}
 import play.api.libs.json.Json
 import play.api.test.Helpers.{POST, contentAsJson, route, status}
 import play.api.test.{FakeRequest, Helpers}
 import uk.gov.hmrc.tradereportingextractsstub.models.{AddressInformation, CompanyInformation, EoriRequest}
 import uk.gov.hmrc.tradereportingextractsstub.utils.SpecBase
+
 import scala.concurrent.Future
 import play.api.libs.json.JsValue
 import play.api.mvc.Result
@@ -31,9 +32,30 @@ import play.api.mvc.Result
 class CompanyInformationControllerSpec extends SpecBase {
 
   "GET /company-information" should {
-    "return 200" in new Setup {
 
-      val eoriRequest                   = EoriRequest(eori = "GB123456789012")
+    "when eori ends in 999 return NotFound" in new Setup {
+
+      val eoriRequest                   = EoriRequest(eori = "GB999")
+      val request: FakeRequest[JsValue] =
+        FakeRequest(POST, routes.CompanyInformationController.companyInformation().url)
+          .withBody(Json.toJson(eoriRequest))
+      val result: Future[Result]        = route(app, request).value
+      status(result) shouldBe NOT_FOUND
+    }
+
+    "when eori ends in 998 return NotFound" in new Setup {
+
+      val eoriRequest                   = EoriRequest(eori = "GB998")
+      val request: FakeRequest[JsValue] =
+        FakeRequest(POST, routes.CompanyInformationController.companyInformation().url)
+          .withBody(Json.toJson(eoriRequest))
+      val result: Future[Result]        = route(app, request).value
+      status(result) shouldBe NOT_FOUND
+    }
+
+    "return 200 when anything else " in new Setup {
+
+      val eoriRequest                   = EoriRequest(eori = "GB1")
       val request: FakeRequest[JsValue] =
         FakeRequest(POST, routes.CompanyInformationController.companyInformation().url)
           .withBody(Json.toJson(eoriRequest))

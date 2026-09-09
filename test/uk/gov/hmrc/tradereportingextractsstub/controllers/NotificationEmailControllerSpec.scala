@@ -33,6 +33,25 @@ import java.time.LocalDateTime
 class NotificationEmailControllerSpec extends SpecBase {
 
   "GET /verified-email" should {
+
+    "when eori ends in 999 return NotFound" in new Setup {
+
+      val eoriRequest                   = EoriRequest(eori = "GB999")
+      val request: FakeRequest[JsValue] = FakeRequest(POST, routes.NotificationEmailController.notificationEmail().url)
+        .withBody(Json.toJson(eoriRequest))
+      val result: Future[Result]        = route(app, request).value
+      status(result) shouldBe NOT_FOUND
+    }
+
+    "when eori ends in 997 return NotFound" in new Setup {
+
+      val eoriRequest                   = EoriRequest(eori = "GB997")
+      val request: FakeRequest[JsValue] = FakeRequest(POST, routes.NotificationEmailController.notificationEmail().url)
+        .withBody(Json.toJson(eoriRequest))
+      val result: Future[Result]        = route(app, request).value
+      status(result) shouldBe NOT_FOUND
+    }
+
     "return 200" in new Setup {
 
       val eoriRequest                   = EoriRequest(eori = "GB123456789012")
